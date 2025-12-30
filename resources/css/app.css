@@ -62,39 +62,56 @@
 }
 
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
+    /* LBS Brand Identity - Violet, Blue, White */
+    --background: oklch(1 0 0); /* Pure white */
+    --foreground: oklch(0.145 0 0); /* Near black for text */
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
+    
+    /* Primary: Violet (#6B21A8 - Purple-700) */
+    --primary: oklch(0.45 0.22 305); /* Rich violet */
+    --primary-foreground: oklch(1 0 0); /* White text on violet */
+    
+    /* Secondary: Blue (#1E40AF - Blue-700) */
+    --secondary: oklch(0.48 0.16 255); /* Deep blue */
+    --secondary-foreground: oklch(1 0 0); /* White text on blue */
+    
+    /* Muted backgrounds */
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
+    
+    /* Accent: Violet lighter shade */
+    --accent: oklch(0.92 0.08 305); /* Light violet */
+    --accent-foreground: oklch(0.45 0.22 305); /* Violet text */
+    
     --destructive: oklch(0.577 0.245 27.325);
-    --destructive-foreground: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.985 0 0);
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
-    --ring: oklch(0.87 0 0);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
+    
+    /* Ring: Violet for focus states */
+    --ring: oklch(0.45 0.22 305);
+    
+    /* Charts: Violet and Blue themed */
+    --chart-1: oklch(0.45 0.22 305); /* Violet */
+    --chart-2: oklch(0.48 0.16 255); /* Blue */
+    --chart-3: oklch(0.65 0.18 285); /* Purple */
+    --chart-4: oklch(0.55 0.20 240); /* Blue-violet */
+    --chart-5: oklch(0.70 0.15 270); /* Light purple */
+    
     --radius: 0.625rem;
+    
+    /* Sidebar: Violet themed */
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-primary: oklch(0.45 0.22 305); /* Violet */
+    --sidebar-primary-foreground: oklch(1 0 0);
+    --sidebar-accent: oklch(0.92 0.08 305); /* Light violet */
+    --sidebar-accent-foreground: oklch(0.45 0.22 305);
     --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.87 0 0);
+    --sidebar-ring: oklch(0.45 0.22 305);
 }
 
 .dark {
