@@ -27,10 +27,10 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap')
 |--------------------------------------------------------------------------
 */
 
-// Route::middleware(['auth', 'verified'])->group(function () {
-//     Route::get('dashboard', function () {
-//         return \Inertia\Inertia::render('dashboard');
-//     })->name('dashboard');
-// });
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('dashboard', function () {
+        return \Inertia\Inertia::render('dashboard');
+    })->name('dashboard');
+});
 
-// require __DIR__.'/settings.php';
+require __DIR__.'/settings.php';
