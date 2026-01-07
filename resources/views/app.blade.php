@@ -27,34 +27,38 @@
         <link rel="canonical" href="{{ url()->current() }}">
 
         {{-- Schema.org JSON-LD - Organisation de base --}}
+        @php
+            $baseUrl = config('app.url', url('/'));
+            $schema = [
+                '@context' => 'https://schema.org',
+                '@type' => 'Organization',
+                'name' => 'LOURA BUNKER SERVICES',
+                'alternateName' => 'LBS',
+                'url' => $baseUrl,
+                'logo' => $baseUrl . '/logo.svg',
+                'description' => 'Votre partenaire de confiance pour le soutage maritime et les services pétroliers en Guinée et Afrique de l\'Ouest. Fiabilité, sécurité, conformité aux normes internationales.',
+                'address' => [
+                    '@type' => 'PostalAddress',
+                    'streetAddress' => 'Camayenne, Commune de Dixinn',
+                    'addressLocality' => 'Conakry',
+                    'addressCountry' => 'GN'
+                ],
+                'contactPoint' => [
+                    '@type' => 'ContactPoint',
+                    'telephone' => '+224-621-41-85-56',
+                    'contactType' => 'customer service',
+                    'email' => 'dg@lbsguinee.com',
+                    'availableLanguage' => ['fr']
+                ],
+                'areaServed' => [
+                    '@type' => 'Country',
+                    'name' => 'Guinée'
+                ],
+                'sameAs' => []
+            ];
+        @endphp
         <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "LOURA BUNKER SERVICES",
-            "alternateName": "LBS",
-            "url": "{{ config('app.url', url('/')) }}",
-            "logo": "{{ config('app.url', url('/')) }}/logo.svg",
-            "description": "Votre partenaire de confiance pour le soutage maritime et les services pétroliers en Guinée et Afrique de l'Ouest. Fiabilité, sécurité, conformité aux normes internationales.",
-            "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Camayenne, Commune de Dixinn",
-                "addressLocality": "Conakry",
-                "addressCountry": "GN"
-            },
-            "contactPoint": {
-                "@type": "ContactPoint",
-                "telephone": "+224-621-41-85-56",
-                "contactType": "customer service",
-                "email": "dg@lbsguinee.com",
-                "availableLanguage": ["fr"]
-            },
-            "areaServed": {
-                "@type": "Country",
-                "name": "Guinée"
-            },
-            "sameAs": []
-        }
+        {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
         </script>
 
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
