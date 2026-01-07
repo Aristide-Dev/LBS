@@ -7,11 +7,56 @@ import LBSLogo from '@/components/lbs-logo';
 export default function Home() {
     return (
         <PublicLayout>
-            <Head title="LOURA BUNKER SERVICES - Soutage Maritime & Services Pétroliers">
+            <Head title="LOURA BUNKER SERVICES - Soutage Maritime & Services Pétroliers en Guinée">
                 <meta
                     name="description"
-                    content="LOURA BUNKER SERVICES - Votre partenaire de confiance pour le soutage maritime et les services pétroliers en Guinée et Afrique de l'Ouest. Fiabilité, sécurité, conformité."
+                    content="LOURA BUNKER SERVICES - Votre partenaire de confiance pour le soutage maritime et les services pétroliers en Guinée et Afrique de l'Ouest. Fiabilité, sécurité, conformité. Disponible 24h/24, 7j/7."
                 />
+                <meta name="keywords" content="soutage maritime, bunkering, carburant maritime, services pétroliers, Guinée, Conakry, Afrique de l'Ouest, MGO, MDO, fuel oil, ship-to-ship" />
+
+                {/* Open Graph / Facebook */}
+                <meta property="og:title" content="LOURA BUNKER SERVICES - Soutage Maritime & Services Pétroliers" />
+                <meta property="og:description" content="Votre partenaire de confiance pour le soutage maritime et les services pétroliers en Guinée. Fiabilité, sécurité, conformité aux normes internationales." />
+                <meta property="og:url" content={typeof window !== 'undefined' ? window.location.origin : 'https://lbsguinee.com'} />
+                <meta property="og:image" content={typeof window !== 'undefined' ? `${window.location.origin}/web-app-manifest-512x512.png` : 'https://lbsguinee.com/web-app-manifest-512x512.png'} />
+                <meta property="og:image:width" content="512" />
+                <meta property="og:image:height" content="512" />
+
+                {/* Twitter Card */}
+                <meta name="twitter:title" content="LOURA BUNKER SERVICES - Soutage Maritime & Services Pétroliers" />
+                <meta name="twitter:description" content="Votre partenaire de confiance pour le soutage maritime et les services pétroliers en Guinée. Disponible 24h/24, 7j/7." />
+                <meta name="twitter:image" content={typeof window !== 'undefined' ? `${window.location.origin}/web-app-manifest-512x512.png` : 'https://lbsguinee.com/web-app-manifest-512x512.png'} />
+
+                {/* Schema.org JSON-LD */}
+                <script type="application/ld+json" dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "Organization",
+                        "name": "LOURA BUNKER SERVICES",
+                        "alternateName": "LBS",
+                        "url": typeof window !== 'undefined' ? window.location.origin : 'https://lbsguinee.com',
+                        "logo": typeof window !== 'undefined' ? `${window.location.origin}/logo.svg` : 'https://lbsguinee.com/logo.svg',
+                        "description": "Votre partenaire de confiance pour le soutage maritime et les services pétroliers en Guinée et Afrique de l'Ouest",
+                        "address": {
+                            "@type": "PostalAddress",
+                            "streetAddress": "Camayenne, Commune de Dixinn",
+                            "addressLocality": "Conakry",
+                            "addressCountry": "GN"
+                        },
+                        "contactPoint": {
+                            "@type": "ContactPoint",
+                            "telephone": "+224-621-41-85-56",
+                            "contactType": "customer service",
+                            "email": "dg@lbsguinee.com",
+                            "availableLanguage": "fr"
+                        },
+                        "sameAs": [],
+                        "areaServed": {
+                            "@type": "Country",
+                            "name": "Guinée"
+                        }
+                    })
+                }} />
             </Head>
 
             {/* Hero Section - Cinematic Maritime */}

@@ -60,11 +60,22 @@ export default function Contact() {
 
     return (
         <PublicLayout>
-            <Head title="Contact - LOURA BUNKER SERVICES">
+            <Head title="Contact - LOURA BUNKER SERVICES | Devis Soutage Maritime Guinée">
                 <meta
                     name="description"
-                    content="Contactez LOURA BUNKER SERVICES pour vos besoins en soutage maritime, services maritimes et pétroliers en Guinée. Disponible 24h/24, 7j/7."
+                    content="Contactez LOURA BUNKER SERVICES pour vos besoins en soutage maritime, services maritimes et pétroliers en Guinée. Disponible 24h/24, 7j/7. Tél: +224 621 41 85 56"
                 />
+                <meta name="keywords" content="contact soutage maritime, devis bunkering Guinée, demande de devis carburant maritime, contact LBS Conakry" />
+
+                {/* Open Graph */}
+                <meta property="og:title" content="Contact - LOURA BUNKER SERVICES" />
+                <meta property="og:description" content="Contactez-nous pour une demande de devis personnalisée. Disponible 24h/24, 7j/7 à Conakry, Guinée." />
+                <meta property="og:url" content={typeof window !== 'undefined' ? `${window.location.origin}/contact` : 'https://lbsguinee.com/contact'} />
+                <meta property="og:type" content="website" />
+
+                {/* Twitter Card */}
+                <meta name="twitter:title" content="Contact - LOURA BUNKER SERVICES" />
+                <meta name="twitter:description" content="Contactez-nous pour vos besoins en soutage maritime. Disponible 24h/24, 7j/7." />
             </Head>
 
             {/* Hero Section */}

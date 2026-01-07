@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,16 +18,19 @@ Route::controller(ContactController::class)->prefix('contact')->name('contact.')
     Route::post('/', 'store')->name('store');
 });
 
+// Sitemap pour SEO
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+
 /*
 |--------------------------------------------------------------------------
 | Routes authentifiées (conservées pour administration future)
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return \Inertia\Inertia::render('dashboard');
-    })->name('dashboard');
-});
+// Route::middleware(['auth', 'verified'])->group(function () {
+//     Route::get('dashboard', function () {
+//         return \Inertia\Inertia::render('dashboard');
+//     })->name('dashboard');
+// });
 
-require __DIR__.'/settings.php';
+// require __DIR__.'/settings.php';
