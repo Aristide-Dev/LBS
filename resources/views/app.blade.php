@@ -5,10 +5,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         {{-- SEO Meta Tags générés par SEOTools --}}
-        {!! SEOMeta::generate() !!}
-        {!! OpenGraph::generate() !!}
-        {!! TwitterCard::generate() !!}
-        {!! JsonLd::generate() !!}
+        @php
+            $seoMeta = app('seotools.metatags');
+            $seoOpenGraph = app('seotools.opengraph');
+            $seoTwitter = app('seotools.twitter');
+            $seoJsonLd = app('seotools.json-ld');
+        @endphp
+        {!! $seoMeta->generate() !!}
+        {!! $seoOpenGraph->generate() !!}
+        {!! $seoTwitter->generate() !!}
+        {!! $seoJsonLd->generate() !!}
 
         {{-- Meta Tags supplémentaires non gérés par SEOTools --}}
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">

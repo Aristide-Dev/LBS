@@ -68,8 +68,8 @@ export default function Contact() {
             {/* Hero Section */}
             <section className="relative min-h-[550px] flex items-center overflow-hidden">
                 <div className="absolute inset-0">
-                    <img
-                        src="/images/maritime_collaboration_1767107241080.png"
+                    <img 
+                        src="/images/maritime_collaboration_1767107241080.png" 
                         alt="Collaboration maritime professionnelle"
                         className="w-full h-full object-cover"
                     />
@@ -114,7 +114,7 @@ export default function Contact() {
 
                 <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
                     <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:items-start">
-
+                        
                         {/* Left Column: Contact Info & FAQ */}
                         <div className="space-y-12">
                             {/* Contact Cards */}
@@ -122,7 +122,7 @@ export default function Contact() {
                                 <h2 className="font-serif text-3xl font-bold text-[oklch(0.15_0.05_245)] mb-8">
                                     Coordonnées
                                 </h2>
-
+                                
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     {/* Phone */}
                                     <div className="group bg-[oklch(0.97_0.005_245)] rounded-2xl p-6 border border-[oklch(0.92_0.01_245)] hover:border-[oklch(0.72_0.14_85/0.5)] hover:shadow-lg transition-all duration-300">
@@ -201,7 +201,7 @@ export default function Contact() {
                                 <div className="space-y-4">
                                     {faqs.map((faq, index) => (
                                         <div key={index} className="bg-white rounded-xl border border-[oklch(0.92_0.01_245)] overflow-hidden transition-all duration-200 hover:shadow-md">
-                                            <button
+                                            <button 
                                                 onClick={() => setOpenFaq(openFaq === index ? null : index)}
                                                 className="w-full flex items-center justify-between p-5 text-left hover:bg-[oklch(0.98_0.003_245)] transition-colors"
                                             >
@@ -211,8 +211,8 @@ export default function Contact() {
                                             <div className={`transition-all duration-300 ease-in-out ${openFaq === index ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
                                                 <div className="px-5 pb-5 border-t border-[oklch(0.94_0.005_245)]">
                                                     <p className="text-[oklch(0.45_0.02_245)] text-sm leading-relaxed pt-4">
-                                                        {faq.answer}
-                                                    </p>
+                                                    {faq.answer}
+                                                </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -232,7 +232,7 @@ export default function Contact() {
                                         <p className="text-[oklch(0.95_0.05_150)] text-lg">
                                             Merci pour votre confiance. Notre équipe va vous recontacter très rapidement.
                                         </p>
-                                        <button
+                                        <button 
                                             onClick={() => reset()}
                                             className="mt-10 px-8 py-3 bg-white text-[oklch(0.40_0.12_150)] font-bold rounded-xl hover:bg-[oklch(0.95_0.03_150)] transition-colors"
                                         >
@@ -341,7 +341,7 @@ export default function Contact() {
                                             </div>
                                         </button>
                                     </form>
-
+                                    
                                     {/* Trust indicators */}
                                     <div className="mt-8 pt-8 border-t border-[oklch(0.94_0.005_245)] flex items-center justify-between">
                                         <div className="flex items-center gap-3">
@@ -350,7 +350,7 @@ export default function Contact() {
                                                 <p className="text-sm font-bold text-[oklch(0.25_0.08_245)]">LOURA BUNKER SERVICES</p>
                                                 <p className="text-xs text-[oklch(0.55_0.02_245)]">Réponse garantie sous 24h</p>
                                             </div>
-                                        </div>
+                                                </div>
                                         <div className="flex items-center gap-2 text-[oklch(0.55_0.02_245)]">
                                             <Shield className="w-4 h-4" />
                                             <span className="text-xs font-medium">Données sécurisées</span>
