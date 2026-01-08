@@ -4,7 +4,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        {{-- SEO Meta Tags --}}
+        {{-- SEO Meta Tags générés par SEOTools --}}
+        {!! SEOMeta::generate() !!}
+        {!! OpenGraph::generate() !!}
+        {!! TwitterCard::generate() !!}
+        {!! JsonLd::generate() !!}
+
+        {{-- Meta Tags supplémentaires non gérés par SEOTools --}}
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
         <meta name="googlebot" content="index, follow">
         <meta name="language" content="fr">
@@ -13,53 +19,7 @@
         <meta name="geo.placename" content="Conakry, Guinée">
         <meta name="geo.position" content="9.5092;-13.7122">
         <meta name="ICBM" content="9.5092, -13.7122">
-
-        {{-- Open Graph / Facebook --}}
-        <meta property="og:type" content="website">
-        <meta property="og:site_name" content="LOURA BUNKER SERVICES">
         <meta property="og:locale" content="fr_FR">
-
-        {{-- Twitter Card --}}
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:site" content="@lbsguinee">
-
-        {{-- Canonical URL (sera défini par Inertia Head) --}}
-        <link rel="canonical" href="{{ url()->current() }}">
-
-        {{-- Schema.org JSON-LD - Organisation de base --}}
-        @php
-            $baseUrl = config('app.url', url('/'));
-            $schema = [
-                '@context' => 'https://schema.org',
-                '@type' => 'Organization',
-                'name' => 'LOURA BUNKER SERVICES',
-                'alternateName' => 'LBS',
-                'url' => $baseUrl,
-                'logo' => $baseUrl . '/logo.svg',
-                'description' => 'Votre partenaire de confiance pour le soutage maritime et les services pétroliers en Guinée et Afrique de l\'Ouest. Fiabilité, sécurité, conformité aux normes internationales.',
-                'address' => [
-                    '@type' => 'PostalAddress',
-                    'streetAddress' => 'Camayenne, Commune de Dixinn',
-                    'addressLocality' => 'Conakry',
-                    'addressCountry' => 'GN'
-                ],
-                'contactPoint' => [
-                    '@type' => 'ContactPoint',
-                    'telephone' => '+224-621-41-85-56',
-                    'contactType' => 'customer service',
-                    'email' => 'dg@lbsguinee.com',
-                    'availableLanguage' => ['fr']
-                ],
-                'areaServed' => [
-                    '@type' => 'Country',
-                    'name' => 'Guinée'
-                ],
-                'sameAs' => []
-            ];
-        @endphp
-        <script type="application/ld+json">
-        {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
-        </script>
 
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         <script>

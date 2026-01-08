@@ -7,56 +7,9 @@ import LBSLogo from '@/components/lbs-logo';
 export default function Home() {
     return (
         <PublicLayout>
-            <Head title="LOURA BUNKER SERVICES - Soutage Maritime & Services Pétroliers en Guinée">
-                <meta
-                    name="description"
-                    content="LOURA BUNKER SERVICES - Votre partenaire de confiance pour le soutage maritime et les services pétroliers en Guinée et Afrique de l'Ouest. Fiabilité, sécurité, conformité. Disponible 24h/24, 7j/7."
-                />
-                <meta name="keywords" content="soutage maritime, bunkering, carburant maritime, services pétroliers, Guinée, Conakry, Afrique de l'Ouest, MGO, MDO, fuel oil, ship-to-ship" />
-
-                {/* Open Graph / Facebook */}
-                <meta property="og:title" content="LOURA BUNKER SERVICES - Soutage Maritime & Services Pétroliers" />
-                <meta property="og:description" content="Votre partenaire de confiance pour le soutage maritime et les services pétroliers en Guinée. Fiabilité, sécurité, conformité aux normes internationales." />
-                <meta property="og:url" content={typeof window !== 'undefined' ? window.location.origin : 'https://lbsguinee.com'} />
-                <meta property="og:image" content={typeof window !== 'undefined' ? `${window.location.origin}/web-app-manifest-512x512.png` : 'https://lbsguinee.com/web-app-manifest-512x512.png'} />
-                <meta property="og:image:width" content="512" />
-                <meta property="og:image:height" content="512" />
-
-                {/* Twitter Card */}
-                <meta name="twitter:title" content="LOURA BUNKER SERVICES - Soutage Maritime & Services Pétroliers" />
-                <meta name="twitter:description" content="Votre partenaire de confiance pour le soutage maritime et les services pétroliers en Guinée. Disponible 24h/24, 7j/7." />
-                <meta name="twitter:image" content={typeof window !== 'undefined' ? `${window.location.origin}/web-app-manifest-512x512.png` : 'https://lbsguinee.com/web-app-manifest-512x512.png'} />
-
-                {/* Schema.org JSON-LD */}
-                <script type="application/ld+json" dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        "@context": "https://schema.org",
-                        "@type": "Organization",
-                        "name": "LOURA BUNKER SERVICES",
-                        "alternateName": "LBS",
-                        "url": typeof window !== 'undefined' ? window.location.origin : 'https://lbsguinee.com',
-                        "logo": typeof window !== 'undefined' ? `${window.location.origin}/logo.svg` : 'https://lbsguinee.com/logo.svg',
-                        "description": "Votre partenaire de confiance pour le soutage maritime et les services pétroliers en Guinée et Afrique de l'Ouest",
-                        "address": {
-                            "@type": "PostalAddress",
-                            "streetAddress": "Camayenne, Commune de Dixinn",
-                            "addressLocality": "Conakry",
-                            "addressCountry": "GN"
-                        },
-                        "contactPoint": {
-                            "@type": "ContactPoint",
-                            "telephone": "+224-621-41-85-56",
-                            "contactType": "customer service",
-                            "email": "dg@lbsguinee.com",
-                            "availableLanguage": "fr"
-                        },
-                        "sameAs": [],
-                        "areaServed": {
-                            "@type": "Country",
-                            "name": "Guinée"
-                        }
-                    })
-                }} />
+            <Head>
+                {/* Les tags SEO (title, description, Open Graph, Twitter, JSON-LD) sont gérés par SEOTools dans app.blade.php */}
+                {/* On garde uniquement le title pour Inertia, mais SEOTools le gère déjà */}
             </Head>
 
             {/* Hero Section - Cinematic Maritime */}
@@ -97,7 +50,7 @@ export default function Home() {
                             <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight">
                                 Votre partenaire de confiance pour le{' '}
                                 <span className="text-gradient-gold">soutage</span>
-                            </h1>
+                        </h1>
 
                             <p className="mt-8 text-xl text-[oklch(0.80_0.02_245)] leading-relaxed max-w-xl">
                                 LOURA BUNKER SERVICES est spécialisée dans la fourniture de carburants maritimes et les services maritimes intégrés. Nous accompagnons armateurs, compagnies offshore et opérateurs portuaires avec des solutions fiables et conformes aux normes internationales.
@@ -120,22 +73,22 @@ export default function Home() {
 
                             {/* CTA Buttons */}
                             <div className="mt-12 flex flex-col sm:flex-row gap-5">
-                                <Link
-                                    href={contactRoute().url}
+                            <Link
+                                href={contactRoute().url}
                                     className="btn-gold px-8 py-4 rounded-lg text-base font-bold flex items-center justify-center gap-3"
                                 >
                                     <Phone className="w-5 h-5" />
                                     Demande de devis
-                                </Link>
-                                <a
-                                    href="#services"
+                            </Link>
+                            <a
+                                href="#services"
                                     className="px-8 py-4 rounded-lg border-2 border-[oklch(0.72_0.14_85/0.4)] text-white font-semibold hover:bg-[oklch(0.72_0.14_85/0.1)] transition-all flex items-center justify-center gap-3"
-                                >
+                            >
                                     Nos services
                                     <ArrowRight className="w-5 h-5" />
-                                </a>
-                            </div>
+                            </a>
                         </div>
+                    </div>
 
                         {/* Stats Cards */}
                         <div className="hidden lg:grid grid-cols-2 gap-6">
@@ -155,7 +108,7 @@ export default function Home() {
                                     <div className="text-xs text-[oklch(0.60_0.02_245)] mt-1">{stat.sublabel}</div>
                                 </div>
                             ))}
-                        </div>
+                            </div>
                     </div>
                 </div>
 
@@ -184,7 +137,7 @@ export default function Home() {
                                         className="w-full aspect-[4/5] object-cover"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-[oklch(0.15_0.05_245/0.8)] via-transparent to-transparent" />
-                                </div>
+                            </div>
 
                                 {/* Floating Card */}
                                 <div className="absolute -bottom-8 -right-8 bg-white rounded-2xl shadow-2xl p-6 border border-[oklch(0.90_0.01_245)]">
@@ -232,9 +185,9 @@ export default function Home() {
                                 <p className="text-[oklch(0.85_0.02_245)] leading-relaxed">
                                     Devenir un partenaire de référence en Afrique de l'Ouest et à l'international dans le domaine du bunkering et des services maritimes, reconnu pour notre professionnalisme, réactivité et intégrité.
                                 </p>
-                            </div>
-                        </div>
-                    </div>
+                                            </div>
+                                            </div>
+                                        </div>
 
                     {/* Values Section */}
                     <div className="mt-32">
@@ -302,9 +255,9 @@ export default function Home() {
                                         <div className="flex items-center gap-4">
                                             <div className="w-14 h-14 rounded-xl bg-[oklch(0.72_0.14_85)] flex items-center justify-center">
                                                 <Fuel className="w-7 h-7 text-[oklch(0.15_0.05_245)]" />
-                                            </div>
+                                    </div>
                                             <h3 className="font-serif text-2xl font-bold text-white">Bunkering</h3>
-                                        </div>
+                                </div>
                                     </div>
                                 </div>
 
@@ -330,15 +283,15 @@ export default function Home() {
                                         <div className="flex items-center gap-3">
                                             <Ship className="w-5 h-5 text-[oklch(0.35_0.10_245)]" />
                                             <span className="font-medium text-[oklch(0.30_0.04_245)]">Ship-to-Ship</span>
-                                        </div>
+                                                    </div>
                                         <div className="flex items-center gap-3">
                                             <Truck className="w-5 h-5 text-[oklch(0.35_0.10_245)]" />
                                             <span className="font-medium text-[oklch(0.30_0.04_245)]">Ship-to-Truck</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                         {/* Side Services */}
                         <div className="space-y-8">
@@ -346,7 +299,7 @@ export default function Home() {
                             <div className="bg-white rounded-3xl p-8 shadow-xl border border-[oklch(0.92_0.01_245)] hover:shadow-2xl transition-all duration-500 group">
                                 <div className="w-14 h-14 rounded-xl bg-[oklch(0.25_0.08_245)] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                                     <Anchor className="w-7 h-7 text-[oklch(0.72_0.14_85)]" />
-                                </div>
+                                            </div>
                                 <h3 className="font-serif text-xl font-bold text-[oklch(0.20_0.05_245)] mb-4">Services Maritimes</h3>
                                 <ul className="space-y-3">
                                     <li className="flex items-center gap-3 text-[oklch(0.40_0.02_245)]">
@@ -358,7 +311,7 @@ export default function Home() {
                                         Support aux opérations soutages
                                     </li>
                                 </ul>
-                            </div>
+                                        </div>
 
                             {/* Petroleum Services */}
                             <div className="bg-gradient-to-br from-[oklch(0.25_0.08_245)] to-[oklch(0.20_0.06_250)] rounded-3xl p-8 text-white group">
@@ -398,7 +351,7 @@ export default function Home() {
                         backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
                         backgroundSize: '40px 40px'
                     }} />
-                </div>
+                        </div>
 
                 <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -406,7 +359,7 @@ export default function Home() {
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[oklch(0.72_0.14_85/0.15)] border border-[oklch(0.72_0.14_85/0.3)] mb-8">
                                 <MapPin className="w-4 h-4 text-[oklch(0.72_0.14_85)]" />
                                 <span className="text-sm font-semibold text-[oklch(0.72_0.14_85)] uppercase tracking-wider">Zones d'Opération</span>
-                            </div>
+                    </div>
 
                             <h2 className="font-serif text-4xl lg:text-5xl font-bold leading-tight">
                                 Présence <span className="text-gradient-gold">Stratégique</span>
@@ -426,23 +379,23 @@ export default function Home() {
                                     <div key={item.title} className="flex gap-6 group">
                                         <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-[oklch(0.25_0.07_245)] flex items-center justify-center group-hover:bg-[oklch(0.72_0.14_85)] transition-colors duration-300">
                                             <item.icon className="w-6 h-6 text-[oklch(0.72_0.14_85)] group-hover:text-[oklch(0.15_0.05_245)]" />
-                                        </div>
+                                            </div>
                                         <div>
                                             <h3 className="font-semibold text-lg">{item.title}</h3>
                                             <p className="text-[oklch(0.65_0.02_245)] mt-1">{item.desc}</p>
                                         </div>
                                     </div>
                                 ))}
-                            </div>
+                                                    </div>
 
                             <div className="mt-12">
-                                <Link
-                                    href={contactRoute().url}
+                                        <Link
+                                            href={contactRoute().url}
                                     className="inline-flex items-center gap-3 btn-gold px-8 py-4 rounded-lg font-bold"
-                                >
+                                        >
                                     <MessageSquare className="w-5 h-5" />
                                     Vérifier la disponibilité
-                                </Link>
+                                        </Link>
                             </div>
                         </div>
 
@@ -501,13 +454,13 @@ export default function Home() {
                             <div className="bg-gradient-to-br from-[oklch(0.97_0.005_245)] to-white rounded-3xl p-10 border border-[oklch(0.92_0.01_245)] h-full hover:shadow-xl transition-all duration-500">
                                 <div className="w-16 h-16 rounded-2xl bg-[oklch(0.72_0.14_85)] flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
                                     <Award className="w-8 h-8 text-[oklch(0.15_0.05_245)]" />
-                                </div>
+                                            </div>
                                 <h3 className="font-serif text-2xl font-bold text-[oklch(0.20_0.05_245)] mb-4">Qualité</h3>
                                 <p className="text-[oklch(0.45_0.02_245)] leading-relaxed">
                                     Nous appliquons des procédures strictes de contrôle afin de garantir la conformité des produits livrés et la satisfaction de nos clients.
                                 </p>
-                            </div>
-                        </div>
+                                        </div>
+                                    </div>
 
                         {/* Sécurité */}
                         <div className="group">
@@ -531,7 +484,7 @@ export default function Home() {
                                     </li>
                                 </ul>
                             </div>
-                        </div>
+                    </div>
 
                         {/* Environnement */}
                         <div className="group">
@@ -643,26 +596,26 @@ export default function Home() {
                     <h2 className="font-serif text-4xl lg:text-6xl font-bold text-[oklch(0.15_0.05_245)] leading-tight">
                         Contactez-nous pour une<br />
                         <span className="text-gradient-gold">demande de devis</span>
-                    </h2>
+                            </h2>
 
                     <p className="mt-8 text-xl text-[oklch(0.45_0.02_245)] max-w-2xl mx-auto">
                         Merci de nous indiquer votre besoin (bunkering, services maritimes, devis) afin que nous vous répondions rapidement.
-                    </p>
+                            </p>
 
                     <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6">
-                        <Link
-                            href={contactRoute().url}
+                                <Link
+                                    href={contactRoute().url}
                             className="btn-ocean px-10 py-5 rounded-xl text-lg font-bold flex items-center gap-3"
-                        >
+                                >
                             <Phone className="w-6 h-6" />
-                            Nous contacter
-                        </Link>
-                        <a
+                                    Nous contacter
+                                </Link>
+                                <a
                             href="tel:+224621418556"
                             className="px-10 py-5 rounded-xl border-2 border-[oklch(0.25_0.08_245)] text-[oklch(0.25_0.08_245)] font-bold hover:bg-[oklch(0.25_0.08_245/0.05)] transition-all flex items-center gap-3"
-                        >
+                                >
                             +224 621 41 85 56
-                        </a>
+                                </a>
                     </div>
                 </div>
             </section>
