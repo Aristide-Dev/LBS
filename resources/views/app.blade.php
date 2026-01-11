@@ -16,6 +16,13 @@
         {!! $seoTwitter->generate() !!}
         {!! $seoJsonLd->generate() !!}
 
+        {{-- Schéma JSON-LD Organization (séparé du WebPage pour éviter les avertissements) --}}
+        @if(isset($organizationSchema))
+        <script type="application/ld+json">
+            {!! json_encode($organizationSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+        </script>
+        @endif
+
         {{-- Meta Tags supplémentaires non gérés par SEOTools --}}
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
         <meta name="googlebot" content="index, follow">
