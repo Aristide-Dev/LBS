@@ -2,9 +2,26 @@ import { Head, Link } from '@inertiajs/react';
 import { Anchor, CheckCircle, Fuel, Ship, Shield, Clock, Award, Truck, MapPin, Users, Zap, Phone, ChevronRight, ShieldCheck, MessageSquare, Factory, Package, Globe2, FileCheck, Leaf, Eye, Target, ArrowRight } from 'lucide-react';
 import PublicLayout from '@/layouts/public-layout';
 import { index as contactRoute } from '@/actions/App/Http/Controllers/ContactController';
+import { useTranslation } from '@/lib/i18n';
 import LBSLogo from '@/components/lbs-logo';
+import { useEffect } from 'react';
 
 export default function Home() {
+    const { t, locale } = useTranslation();
+
+    // Gérer le scroll vers l'ancre au chargement de la page
+    useEffect(() => {
+        const hash = window.location.hash;
+        if (hash) {
+            // Attendre que le DOM soit complètement chargé
+            setTimeout(() => {
+                const element = document.querySelector(hash);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
+    }, []);
     return (
         <PublicLayout>
             <Head>
@@ -18,7 +35,7 @@ export default function Home() {
                 <div className="absolute inset-0">
                     <img
                         src="/images/maritime_bunkering_hero_1767107122672.png"
-                        alt="Opérations de soutage maritime"
+                        alt={t('home.hero.images.hero')}
                         className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-[oklch(0.20_0.15_295)] via-[oklch(0.28_0.16_290/0.70)] to-[oklch(0.35_0.18_285/0.75)]" />
@@ -42,73 +59,73 @@ export default function Home() {
                                 {/* <LBSLogo size="lg" variant="icon" className="drop-shadow-2xl" /> */}
                                 <div className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[oklch(0.70_0.16_55/0.20)] border border-[oklch(0.70_0.16_55/0.4)] backdrop-blur-md">
                                     <Anchor className="w-4 h-4 text-[oklch(0.80_0.14_55)]" />
-                                    <span className="text-sm font-semibold text-[oklch(0.80_0.14_55)] tracking-wide">Leader du Soutage en Guinée</span>
+                                    <span className="text-sm font-semibold text-[oklch(0.80_0.14_55)] tracking-wide">{t('home.hero.badge')}</span>
                                 </div>
                             </div>
 
                             {/* Main heading */}
                             <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight">
-                                Votre partenaire de confiance pour le{' '}
-                                <span className="text-gradient-gold">soutage</span>
-                        </h1>
+                                {t('home.hero.title')}{' '}
+                                <span className="text-gradient-gold">{t('home.hero.title_highlight')}</span>
+                            </h1>
 
                             <p className="mt-8 text-xl text-[oklch(0.85_0.02_290)] leading-relaxed max-w-xl">
-                                LOURA BUNKER SERVICES est spécialisée dans la fourniture de carburants maritimes et les services maritimes intégrés. Nous accompagnons armateurs, compagnies offshore et opérateurs portuaires avec des solutions fiables et conformes aux normes internationales.
+                                {t('home.hero.description')}
                             </p>
 
                             {/* Key commitments */}
                             <div className="mt-10 grid grid-cols-2 gap-4">
                                 {[
-                                    { icon: Zap, text: 'Fiabilité & rapidité' },
-                                    { icon: Shield, text: 'Normes strictes' },
-                                    { icon: Leaf, text: 'Éco-responsabilité' },
-                                    { icon: Eye, text: 'Transparence totale' },
+                                    { icon: Zap, key: 'reliability' },
+                                    { icon: Shield, key: 'standards' },
+                                    { icon: Leaf, key: 'eco' },
+                                    { icon: Eye, key: 'transparency' },
                                 ].map((item) => (
-                                    <div key={item.text} className="flex items-center gap-3 text-[oklch(0.90_0.02_290)]">
+                                    <div key={item.key} className="flex items-center gap-3 text-[oklch(0.90_0.02_290)]">
                                         <item.icon className="w-5 h-5 text-[oklch(0.55_0.12_175)]" />
-                                        <span className="text-sm font-medium">{item.text}</span>
+                                        <span className="text-sm font-medium">{t(`home.hero.commitments.${item.key}`)}</span>
                                     </div>
                                 ))}
                             </div>
 
                             {/* CTA Buttons */}
                             <div className="mt-12 flex flex-col sm:flex-row gap-5">
-                            <Link
-                                href={contactRoute().url}
+                                <Link
+                                    href={contactRoute({ locale }).url}
                                     className="btn-gold px-8 py-4 rounded-lg text-base font-bold flex items-center justify-center gap-3"
                                 >
                                     <Phone className="w-5 h-5" />
-                                    Demande de devis
-                            </Link>
-                            <a
-                                href="#services"
+                                    {t('home.hero.cta.quote')}
+                                </Link>
+                                <a
+                                    href="#services"
                                     className="px-8 py-4 rounded-lg border-2 border-[oklch(0.70_0.16_55/0.5)] text-white font-semibold hover:bg-[oklch(0.70_0.16_55/0.15)] transition-all flex items-center justify-center gap-3"
-                            >
-                                    Nos services
+                                >
+                                    {t('home.hero.cta.services')}
                                     <ArrowRight className="w-5 h-5" />
-                            </a>
+                                </a>
+                            </div>
                         </div>
-                    </div>
 
                         {/* Stats Cards */}
                         <div className="hidden lg:grid grid-cols-2 gap-6">
                             {[
-                                { value: '24/7', label: 'Disponibilité', sublabel: 'Service continu', icon: Clock },
-                                { value: '100%', label: 'Conformité', sublabel: 'Normes internationales', icon: ShieldCheck },
-                                { value: 'ISO', label: 'Certifications', sublabel: 'Qualité garantie', icon: Award },
-                                { value: '7j/7', label: 'Opérations', sublabel: 'Sans interruption', icon: Ship },
+                                { value: '24/7', key: 'availability', icon: Clock },
+                                { value: '100%', key: 'compliance', icon: ShieldCheck },
+                                { value: 'ISO', key: 'certifications', icon: Award },
+                                { value: '7j/7', key: 'operations', icon: Ship },
                             ].map((stat, index) => (
                                 <div
-                                    key={stat.label}
+                                    key={stat.key}
                                     className={`group glass-dark rounded-2xl p-8 hover:border-[oklch(0.70_0.16_55/0.6)] transition-all duration-500 hover:-translate-y-2 ${index === 0 ? 'mt-12' : ''} ${index === 3 ? '-mt-12' : ''}`}
                                 >
                                     <stat.icon className="w-8 h-8 text-[oklch(0.70_0.16_55)] mb-4 group-hover:scale-110 transition-transform" />
                                     <div className="text-4xl font-serif font-bold text-white mb-2">{stat.value}</div>
-                                    <div className="text-sm font-semibold text-[oklch(0.70_0.16_55)]">{stat.label}</div>
-                                    <div className="text-xs text-[oklch(0.70_0.05_290)] mt-1">{stat.sublabel}</div>
+                                    <div className="text-sm font-semibold text-[oklch(0.70_0.16_55)]">{t(`home.hero.stats.${stat.key}`)}</div>
+                                    <div className="text-xs text-[oklch(0.70_0.05_290)] mt-1">{t(`home.hero.stats.${stat.key}_sub`)}</div>
                                 </div>
                             ))}
-                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -133,11 +150,11 @@ export default function Home() {
                                 <div className="relative rounded-3xl overflow-hidden shadow-2xl">
                                     <img
                                         src="/images/professional_team_fuel_1767107186510.png"
-                                        alt="Équipe professionnelle LOURA BUNKER SERVICES"
+                                        alt={t('home.hero.images.team')}
                                         className="w-full aspect-[4/5] object-cover"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-[oklch(0.28_0.16_290/0.8)] via-transparent to-transparent" />
-                            </div>
+                                </div>
 
                                 {/* Floating Card */}
                                 <div className="absolute -bottom-8 -right-8 bg-white rounded-2xl shadow-2xl p-6 border border-[oklch(0.88_0.02_290)]">
@@ -146,8 +163,8 @@ export default function Home() {
                                             <Users className="w-7 h-7 text-[oklch(0.70_0.16_55)]" />
                                         </div>
                                         <div>
-                                            <p className="text-2xl font-serif font-bold text-[oklch(0.28_0.14_295)]">Expertise</p>
-                                            <p className="text-sm text-[oklch(0.50_0.08_290)]">Professionnels certifiés</p>
+                                            <p className="text-2xl font-serif font-bold text-[oklch(0.28_0.14_295)]">{t('home.about.expertise.title')}</p>
+                                            <p className="text-sm text-[oklch(0.50_0.08_290)]">{t('home.about.expertise.subtitle')}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -161,58 +178,56 @@ export default function Home() {
                         <div className="order-1 lg:order-2">
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[oklch(0.35_0.18_290/0.10)] border border-[oklch(0.35_0.18_290/0.20)] mb-8">
                                 <Globe2 className="w-4 h-4 text-[oklch(0.35_0.18_290)]" />
-                                <span className="text-sm font-semibold text-[oklch(0.35_0.18_290)] uppercase tracking-wider">À Propos</span>
+                                <span className="text-sm font-semibold text-[oklch(0.35_0.18_290)] uppercase tracking-wider">{t('home.about.badge')}</span>
                             </div>
 
                             <h2 className="font-serif text-4xl lg:text-5xl font-bold text-[oklch(0.25_0.14_295)] leading-tight">
-                                Qui sommes-<span className="text-gradient-gold">nous</span> ?
+                                {t('home.about.title')}<span className="text-gradient-gold">{t('home.about.title_highlight')}</span> ?
                             </h2>
 
-                            <p className="mt-8 text-lg text-[oklch(0.45_0.05_290)] leading-relaxed">
-                                Fondée avec l'ambition d'apporter des solutions professionnelles et durables au secteur maritime, <strong className="text-[oklch(0.35_0.18_290)]">LOURA BUNKER SERVICES</strong> s'est imposée comme un acteur sérieux du bunkering (soutage) et des services maritimes.
-                            </p>
+                            <p className="mt-8 text-lg text-[oklch(0.45_0.05_290)] leading-relaxed" dangerouslySetInnerHTML={{ __html: t('home.about.description_1') }} />
 
                             <p className="mt-6 text-lg text-[oklch(0.45_0.05_290)] leading-relaxed">
-                                Notre mission est de fournir à nos clients des produits et services de haute qualité tout en respectant les standards internationaux de sécurité, de conformité et de protection de l'environnement.
+                                {t('home.about.description_2')}
                             </p>
 
                             {/* Vision Card */}
                             <div className="mt-10 p-8 rounded-2xl bg-gradient-to-br from-[oklch(0.35_0.18_290)] to-[oklch(0.28_0.16_295)] text-white">
                                 <div className="flex items-center gap-3 mb-4">
                                     <Target className="w-6 h-6 text-[oklch(0.70_0.16_55)]" />
-                                    <h3 className="text-xl font-serif font-bold">Notre Vision</h3>
+                                    <h3 className="text-xl font-serif font-bold">{t('home.about.vision.title')}</h3>
                                 </div>
                                 <p className="text-[oklch(0.88_0.02_290)] leading-relaxed">
-                                    Devenir un partenaire de référence en Afrique de l'Ouest et à l'international dans le domaine du bunkering et des services maritimes, reconnu pour notre professionnalisme, réactivité et intégrité.
+                                    {t('home.about.vision.description')}
                                 </p>
-                                            </div>
-                                            </div>
-                                        </div>
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Values Section */}
                     <div className="mt-32">
                         <div className="text-center mb-16">
                             <h3 className="font-serif text-3xl lg:text-4xl font-bold text-[oklch(0.25_0.14_295)]">
-                                Nos <span className="text-gradient-gold">Valeurs</span>
+                                {t('home.about.values.title')} <span className="text-gradient-gold">{t('home.about.values.title_highlight')}</span>
                             </h3>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                             {[
-                                { icon: Shield, title: 'Sécurité', desc: 'Priorité absolue dans toutes nos opérations', color: 'oklch(0.35_0.18_290)' },
-                                { icon: Award, title: 'Qualité', desc: 'Produits conformes et services maîtrisés', color: 'oklch(0.70_0.16_55)' },
-                                { icon: Eye, title: 'Transparence', desc: 'Relations claires et confiance durable', color: 'oklch(0.45_0.18_285)' },
-                                { icon: Leaf, title: 'Environnement', desc: 'Réduction de l\'impact écologique', color: 'oklch(0.55_0.12_175)' },
+                                { icon: Shield, key: 'security', color: 'oklch(0.35_0.18_290)' },
+                                { icon: Award, key: 'quality', color: 'oklch(0.70_0.16_55)' },
+                                { icon: Eye, key: 'transparency', color: 'oklch(0.45_0.18_285)' },
+                                { icon: Leaf, key: 'environment', color: 'oklch(0.55_0.12_175)' },
                             ].map((value) => (
-                                <div key={value.title} className="group text-center">
+                                <div key={value.key} className="group text-center">
                                     <div
                                         className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-6 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6"
                                         style={{ backgroundColor: `${value.color}` }}
                                     >
                                         <value.icon className="w-10 h-10 text-white" />
                                     </div>
-                                    <h4 className="font-serif text-xl font-bold text-[oklch(0.28_0.14_295)] mb-3">{value.title}</h4>
-                                    <p className="text-[oklch(0.50_0.05_290)]">{value.desc}</p>
+                                    <h4 className="font-serif text-xl font-bold text-[oklch(0.28_0.14_295)] mb-3">{t(`home.about.values.${value.key}.title`)}</h4>
+                                    <p className="text-[oklch(0.50_0.05_290)]">{t(`home.about.values.${value.key}.description`)}</p>
                                 </div>
                             ))}
                         </div>
@@ -229,13 +244,13 @@ export default function Home() {
                     <div className="text-center mb-20">
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[oklch(0.70_0.16_55/0.15)] border border-[oklch(0.70_0.16_55/0.3)] mb-8">
                             <Fuel className="w-4 h-4 text-[oklch(0.65_0.14_55)]" />
-                            <span className="text-sm font-semibold text-[oklch(0.58_0.12_55)] uppercase tracking-wider">Nos Services</span>
+                            <span className="text-sm font-semibold text-[oklch(0.58_0.12_55)] uppercase tracking-wider">{t('home.services.badge')}</span>
                         </div>
                         <h2 className="font-serif text-4xl lg:text-5xl font-bold text-[oklch(0.25_0.14_295)]">
-                            Bunkering & Services <span className="text-gradient-ocean">Maritimes</span>
+                            {t('home.services.title')} <span className="text-gradient-ocean">{t('home.services.title_highlight')}</span>
                         </h2>
                         <p className="mt-6 text-xl text-[oklch(0.50_0.05_290)] max-w-3xl mx-auto">
-                            Des solutions complètes de fourniture de carburants et services maritimes intégrés
+                            {t('home.services.description')}
                         </p>
                     </div>
 
@@ -247,7 +262,7 @@ export default function Home() {
                                 <div className="relative h-72 overflow-hidden">
                                     <img
                                         src="/images/fuel_storage_facility_1767107217528.png"
-                                        alt="Installation de stockage de carburant"
+                                        alt={t('home.hero.images.storage')}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-[oklch(0.28_0.16_290)] via-[oklch(0.28_0.16_290/0.3)] to-transparent" />
@@ -255,20 +270,20 @@ export default function Home() {
                                         <div className="flex items-center gap-4">
                                             <div className="w-14 h-14 rounded-xl bg-[oklch(0.70_0.16_55)] flex items-center justify-center">
                                                 <Fuel className="w-7 h-7 text-white" />
-                                    </div>
-                                            <h3 className="font-serif text-2xl font-bold text-white">Bunkering</h3>
-                                </div>
+                                            </div>
+                                            <h3 className="font-serif text-2xl font-bold text-white">{t('home.services.bunkering.title')}</h3>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div className="p-10">
                                     <p className="text-[oklch(0.45_0.05_290)] mb-8 text-lg">
-                                        Fourniture de carburants maritimes conformes aux normes en vigueur, adaptés aux besoins spécifiques de chaque navire.
+                                        {t('home.services.bunkering.description')}
                                     </p>
 
                                     {/* Products Grid */}
                                     <div className="mb-8">
-                                        <h4 className="text-sm font-bold text-[oklch(0.35_0.12_290)] uppercase tracking-wider mb-4">Produits disponibles</h4>
+                                        <h4 className="text-sm font-bold text-[oklch(0.35_0.12_290)] uppercase tracking-wider mb-4">{t('home.services.bunkering.products_title')}</h4>
                                         <div className="grid grid-cols-3 gap-3">
                                             {['DO (Diesel Oil)', 'GO (Gasoil)', 'MDO', 'MGO', 'LGFO', 'LSFO', 'FIOUL LÉGER', 'HSFO', 'FIOUL LOURD'].map((product) => (
                                                 <div key={product} className="px-3 py-2 rounded-lg bg-[oklch(0.96_0.008_290)] border border-[oklch(0.88_0.02_290)] text-center">
@@ -283,15 +298,15 @@ export default function Home() {
                                         <div className="flex items-center gap-3">
                                             <Ship className="w-5 h-5 text-[oklch(0.40_0.18_290)]" />
                                             <span className="font-medium text-[oklch(0.35_0.12_290)]">Ship-to-Ship</span>
-                                                    </div>
+                                        </div>
                                         <div className="flex items-center gap-3">
                                             <Truck className="w-5 h-5 text-[oklch(0.40_0.18_290)]" />
                                             <span className="font-medium text-[oklch(0.35_0.12_290)]">Ship-to-Truck</span>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         {/* Side Services */}
                         <div className="space-y-8">
@@ -299,34 +314,34 @@ export default function Home() {
                             <div className="bg-white rounded-3xl p-8 shadow-xl border border-[oklch(0.88_0.02_290)] hover:shadow-2xl transition-all duration-500 group">
                                 <div className="w-14 h-14 rounded-xl bg-[oklch(0.35_0.18_290)] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                                     <Anchor className="w-7 h-7 text-[oklch(0.70_0.16_55)]" />
-                                            </div>
-                                <h3 className="font-serif text-xl font-bold text-[oklch(0.28_0.14_295)] mb-4">Services Maritimes</h3>
+                                </div>
+                                <h3 className="font-serif text-xl font-bold text-[oklch(0.28_0.14_295)] mb-4">{t('home.services.maritime.title')}</h3>
                                 <ul className="space-y-3">
                                     <li className="flex items-center gap-3 text-[oklch(0.45_0.05_290)]">
                                         <CheckCircle className="w-5 h-5 text-[oklch(0.55_0.12_175)]" />
-                                        Avitaillement des navires
+                                        {t('home.services.maritime.items.ship_supply')}
                                     </li>
                                     <li className="flex items-center gap-3 text-[oklch(0.45_0.05_290)]">
                                         <CheckCircle className="w-5 h-5 text-[oklch(0.55_0.12_175)]" />
-                                        Support aux opérations soutages
+                                        {t('home.services.maritime.items.support')}
                                     </li>
                                 </ul>
-                                        </div>
+                            </div>
 
                             {/* Petroleum Services */}
                             <div className="bg-gradient-to-br from-[oklch(0.35_0.18_290)] to-[oklch(0.28_0.16_295)] rounded-3xl p-8 text-white group">
                                 <div className="w-14 h-14 rounded-xl bg-[oklch(0.70_0.16_55)] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                                     <Factory className="w-7 h-7 text-white" />
                                 </div>
-                                <h3 className="font-serif text-xl font-bold mb-4">Services Pétroliers</h3>
+                                <h3 className="font-serif text-xl font-bold mb-4">{t('home.services.petroleum.title')}</h3>
                                 <ul className="space-y-3">
                                     <li className="flex items-center gap-3 text-[oklch(0.88_0.02_290)]">
                                         <CheckCircle className="w-5 h-5 text-[oklch(0.70_0.16_55)]" />
-                                        Approvisionnement & trading
+                                        {t('home.services.petroleum.items.supply')}
                                     </li>
                                     <li className="flex items-center gap-3 text-[oklch(0.88_0.02_290)]">
                                         <CheckCircle className="w-5 h-5 text-[oklch(0.70_0.16_55)]" />
-                                        Transport et stockage
+                                        {t('home.services.petroleum.items.transport')}
                                     </li>
                                 </ul>
                             </div>
@@ -337,7 +352,7 @@ export default function Home() {
                     <div className="mt-16 text-center p-8 rounded-2xl bg-[oklch(0.70_0.16_55/0.10)] border border-[oklch(0.70_0.16_55/0.25)]">
                         <p className="text-lg text-[oklch(0.40_0.12_290)] font-medium">
                             <ShieldCheck className="w-6 h-6 inline-block mr-2 text-[oklch(0.65_0.14_55)]" />
-                            Chaque opération est réalisée avec <strong>rigueur, traçabilité</strong> et respect des procédures de sécurité.
+                            <span dangerouslySetInnerHTML={{ __html: t('home.services.commitment') }} />
                         </p>
                     </div>
                 </div>
@@ -351,7 +366,7 @@ export default function Home() {
                         backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
                         backgroundSize: '40px 40px'
                     }} />
-                        </div>
+                </div>
 
                 <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -359,7 +374,7 @@ export default function Home() {
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[oklch(0.70_0.16_55/0.20)] border border-[oklch(0.70_0.16_55/0.4)] mb-8">
                                 <MapPin className="w-4 h-4 text-[oklch(0.70_0.16_55)]" />
                                 <span className="text-sm font-semibold text-[oklch(0.70_0.16_55)] uppercase tracking-wider">Zones d'Opération</span>
-                    </div>
+                            </div>
 
                             <h2 className="font-serif text-4xl lg:text-5xl font-bold leading-tight">
                                 Présence <span className="text-gradient-gold">Stratégique</span>
@@ -372,30 +387,30 @@ export default function Home() {
                             {/* Operational strengths */}
                             <div className="mt-12 space-y-6">
                                 {[
-                                    { icon: Globe2, title: 'Couverture régionale flexible', desc: 'Présence sur plusieurs sites stratégiques' },
-                                    { icon: Clock, title: 'Disponibilité 24/7', desc: 'Service continu sans interruption' },
-                                    { icon: Users, title: 'Réseau de partenaires fiables', desc: 'Logistique optimisée et sécurisée' },
+                                    { icon: Globe2, key: 'coverage' },
+                                    { icon: Clock, key: 'availability' },
+                                    { icon: Users, key: 'network' },
                                 ].map((item) => (
-                                    <div key={item.title} className="flex gap-6 group">
+                                    <div key={item.key} className="flex gap-6 group">
                                         <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-[oklch(0.38_0.14_290)] flex items-center justify-center group-hover:bg-[oklch(0.70_0.16_55)] transition-colors duration-300">
                                             <item.icon className="w-6 h-6 text-[oklch(0.70_0.16_55)] group-hover:text-white" />
-                                            </div>
+                                        </div>
                                         <div>
-                                            <h3 className="font-semibold text-lg">{item.title}</h3>
-                                            <p className="text-[oklch(0.72_0.04_290)] mt-1">{item.desc}</p>
+                                            <h3 className="font-semibold text-lg">{t(`home.zones.strengths.${item.key}.title`)}</h3>
+                                            <p className="text-[oklch(0.72_0.04_290)] mt-1">{t(`home.zones.strengths.${item.key}.description`)}</p>
                                         </div>
                                     </div>
                                 ))}
-                                                    </div>
+                            </div>
 
                             <div className="mt-12">
-                                        <Link
-                                            href={contactRoute().url}
+                                <Link
+                                    href={contactRoute({ locale }).url}
                                     className="inline-flex items-center gap-3 btn-gold px-8 py-4 rounded-lg font-bold"
-                                        >
+                                >
                                     <MessageSquare className="w-5 h-5" />
-                                    Vérifier la disponibilité
-                                        </Link>
+                                    {t('home.zones.cta')}
+                                </Link>
                             </div>
                         </div>
 
@@ -421,10 +436,10 @@ export default function Home() {
 
                                 {/* Corner decorations */}
                                 <div className="absolute top-4 left-4 px-3 py-1 rounded bg-[oklch(0.70_0.16_55/0.25)] text-xs font-mono text-[oklch(0.70_0.16_55)]">
-                                    MARITIME ZONE
+                                    {t('home.zones.maritime_zone')}
                                 </div>
                                 <div className="absolute bottom-4 right-4 px-3 py-1 rounded bg-[oklch(0.70_0.16_55/0.25)] text-xs font-mono text-[oklch(0.70_0.16_55)]">
-                                    ACTIVE OPS
+                                    {t('home.zones.active_ops')}
                                 </div>
                             </div>
                         </div>
@@ -438,13 +453,13 @@ export default function Home() {
                     <div className="text-center mb-20">
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[oklch(0.55_0.12_175/0.12)] border border-[oklch(0.55_0.12_175/0.25)] mb-8">
                             <ShieldCheck className="w-4 h-4 text-[oklch(0.55_0.12_175)]" />
-                            <span className="text-sm font-semibold text-[oklch(0.50_0.10_175)] uppercase tracking-wider">QSE</span>
+                            <span className="text-sm font-semibold text-[oklch(0.50_0.10_175)] uppercase tracking-wider">{t('home.qse.badge')}</span>
                         </div>
                         <h2 className="font-serif text-4xl lg:text-5xl font-bold text-[oklch(0.25_0.14_295)]">
-                            Qualité, Sécurité & <span className="text-gradient-ocean">Environnement</span>
+                            {t('home.qse.title')} <span className="text-gradient-ocean">{t('home.qse.title_highlight')}</span>
                         </h2>
                         <p className="mt-6 text-xl text-[oklch(0.50_0.05_290)] max-w-3xl mx-auto">
-                            Ces trois piliers sont au cœur de toutes les activités de LOURA BUNKER SERVICES
+                            {t('home.qse.description')}
                         </p>
                     </div>
 
@@ -454,13 +469,13 @@ export default function Home() {
                             <div className="bg-gradient-to-br from-[oklch(0.97_0.008_290)] to-white rounded-3xl p-10 border border-[oklch(0.88_0.02_290)] h-full hover:shadow-xl transition-all duration-500">
                                 <div className="w-16 h-16 rounded-2xl bg-[oklch(0.70_0.16_55)] flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
                                     <Award className="w-8 h-8 text-white" />
-                                            </div>
-                                <h3 className="font-serif text-2xl font-bold text-[oklch(0.28_0.14_295)] mb-4">Qualité</h3>
+                                </div>
+                                <h3 className="font-serif text-2xl font-bold text-[oklch(0.28_0.14_295)] mb-4">{t('home.qse.quality.title')}</h3>
                                 <p className="text-[oklch(0.50_0.05_290)] leading-relaxed">
-                                    Nous appliquons des procédures strictes de contrôle afin de garantir la conformité des produits livrés et la satisfaction de nos clients.
+                                    {t('home.qse.quality.description')}
                                 </p>
-                                        </div>
-                                    </div>
+                            </div>
+                        </div>
 
                         {/* Sécurité */}
                         <div className="group">
@@ -468,23 +483,23 @@ export default function Home() {
                                 <div className="w-16 h-16 rounded-2xl bg-[oklch(0.70_0.16_55)] flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
                                     <Shield className="w-8 h-8 text-white" />
                                 </div>
-                                <h3 className="font-serif text-2xl font-bold mb-4">Sécurité</h3>
+                                <h3 className="font-serif text-2xl font-bold mb-4">{t('home.qse.security.title')}</h3>
                                 <ul className="space-y-3 text-[oklch(0.88_0.02_290)]">
                                     <li className="flex items-start gap-3">
                                         <CheckCircle className="w-5 h-5 text-[oklch(0.70_0.16_55)] flex-shrink-0 mt-0.5" />
-                                        <span>Respect des standards internationaux</span>
+                                        <span>{t('home.qse.security.items.standards')}</span>
                                     </li>
                                     <li className="flex items-start gap-3">
                                         <CheckCircle className="w-5 h-5 text-[oklch(0.70_0.16_55)] flex-shrink-0 mt-0.5" />
-                                        <span>Formation continue du personnel</span>
+                                        <span>{t('home.qse.security.items.training')}</span>
                                     </li>
                                     <li className="flex items-start gap-3">
                                         <CheckCircle className="w-5 h-5 text-[oklch(0.70_0.16_55)] flex-shrink-0 mt-0.5" />
-                                        <span>Prévention des risques opérationnels</span>
+                                        <span>{t('home.qse.security.items.prevention')}</span>
                                     </li>
                                 </ul>
                             </div>
-                    </div>
+                        </div>
 
                         {/* Environnement */}
                         <div className="group">
@@ -492,19 +507,19 @@ export default function Home() {
                                 <div className="w-16 h-16 rounded-2xl bg-[oklch(0.55_0.12_175)] flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
                                     <Leaf className="w-8 h-8 text-white" />
                                 </div>
-                                <h3 className="font-serif text-2xl font-bold text-[oklch(0.28_0.14_295)] mb-4">Environnement</h3>
+                                <h3 className="font-serif text-2xl font-bold text-[oklch(0.28_0.14_295)] mb-4">{t('home.qse.environment.title')}</h3>
                                 <ul className="space-y-3 text-[oklch(0.50_0.05_290)]">
                                     <li className="flex items-start gap-3">
                                         <CheckCircle className="w-5 h-5 text-[oklch(0.55_0.12_175)] flex-shrink-0 mt-0.5" />
-                                        <span>Respect des réglementations</span>
+                                        <span>{t('home.qse.environment.items.regulations')}</span>
                                     </li>
                                     <li className="flex items-start gap-3">
                                         <CheckCircle className="w-5 h-5 text-[oklch(0.55_0.12_175)] flex-shrink-0 mt-0.5" />
-                                        <span>Prévention des pollutions marines</span>
+                                        <span>{t('home.qse.environment.items.pollution')}</span>
                                     </li>
                                     <li className="flex items-start gap-3">
                                         <CheckCircle className="w-5 h-5 text-[oklch(0.55_0.12_175)] flex-shrink-0 mt-0.5" />
-                                        <span>Pratiques responsables</span>
+                                        <span>{t('home.qse.environment.items.sustainability')}</span>
                                     </li>
                                 </ul>
                             </div>
@@ -523,27 +538,32 @@ export default function Home() {
                                 <div className="w-14 h-14 rounded-xl bg-[oklch(0.35_0.18_290)] flex items-center justify-center">
                                     <FileCheck className="w-7 h-7 text-[oklch(0.70_0.16_55)]" />
                                 </div>
-                                <h3 className="font-serif text-2xl font-bold text-[oklch(0.28_0.14_295)]">Documents & Ressources</h3>
+                                <h3 className="font-serif text-2xl font-bold text-[oklch(0.28_0.14_295)]">{t('home.documents.title')}</h3>
                             </div>
 
                             <p className="text-[oklch(0.50_0.05_290)] mb-8">
-                                Documents utiles à nos clients et partenaires, disponibles sur demande ou en téléchargement.
+                                {t('home.documents.description')}
                             </p>
 
                             <ul className="space-y-4">
-                                {['Brochures institutionnelles', 'Fiches techniques des carburants', 'Politique QSE', 'Conditions générales de vente'].map((doc) => (
-                                    <li key={doc} className="flex items-center gap-4 p-4 rounded-xl bg-[oklch(0.97_0.008_290)] hover:bg-[oklch(0.94_0.012_290)] transition-colors">
+                                {[
+                                    { key: 'brochures' },
+                                    { key: 'technical_sheets' },
+                                    { key: 'qse_policy' },
+                                    { key: 'terms' },
+                                ].map((doc) => (
+                                    <li key={doc.key} className="flex items-center gap-4 p-4 rounded-xl bg-[oklch(0.97_0.008_290)] hover:bg-[oklch(0.94_0.012_290)] transition-colors">
                                         <Package className="w-5 h-5 text-[oklch(0.40_0.18_290)]" />
-                                        <span className="font-medium text-[oklch(0.35_0.12_290)]">{doc}</span>
+                                        <span className="font-medium text-[oklch(0.35_0.12_290)]">{t(`home.documents.items.${doc.key}`)}</span>
                                     </li>
                                 ))}
                             </ul>
 
                             <Link
-                                href={contactRoute().url}
+                                href={contactRoute({ locale }).url}
                                 className="mt-8 inline-flex items-center gap-2 text-[oklch(0.40_0.18_290)] font-semibold hover:gap-4 transition-all"
                             >
-                                Demander les documents <ChevronRight className="w-5 h-5" />
+                                {t('home.documents.cta')} <ChevronRight className="w-5 h-5" />
                             </Link>
                         </div>
 
@@ -562,21 +582,21 @@ export default function Home() {
 
                             <div className="grid grid-cols-2 gap-4">
                                 {[
-                                    { icon: Ship, label: 'Armateurs' },
-                                    { icon: Anchor, label: 'Compagnies maritimes' },
-                                    { icon: Factory, label: 'Opérateurs offshore' },
-                                    { icon: MapPin, label: 'Autorités portuaires' },
+                                    { icon: Ship, key: 'shipowners' },
+                                    { icon: Anchor, key: 'maritime_companies' },
+                                    { icon: Factory, key: 'offshore_operators' },
+                                    { icon: MapPin, key: 'port_authorities' },
                                 ].map((client) => (
-                                    <div key={client.label} className="flex items-center gap-3 p-4 rounded-xl bg-[oklch(0.42_0.14_290)]">
+                                    <div key={client.key} className="flex items-center gap-3 p-4 rounded-xl bg-[oklch(0.42_0.14_290)]">
                                         <client.icon className="w-5 h-5 text-[oklch(0.70_0.16_55)]" />
-                                        <span className="font-medium text-[oklch(0.92_0.02_290)]">{client.label}</span>
+                                        <span className="font-medium text-[oklch(0.92_0.02_290)]">{t(`home.clients.items.${client.key}`)}</span>
                                     </div>
                                 ))}
                             </div>
 
                             <div className="mt-10 pt-8 border-t border-[oklch(0.48_0.10_290)]">
                                 <p className="text-sm text-[oklch(0.72_0.04_290)] italic">
-                                    "La référence guinéenne du soutage maritime"
+                                    "{t('home.clients.tagline')}"
                                 </p>
                             </div>
                         </div>
@@ -596,26 +616,26 @@ export default function Home() {
                     <h2 className="font-serif text-4xl lg:text-6xl font-bold text-[oklch(0.25_0.14_295)] leading-tight">
                         Contactez-nous pour une<br />
                         <span className="text-gradient-gold">demande de devis</span>
-                            </h2>
+                    </h2>
 
                     <p className="mt-8 text-xl text-[oklch(0.50_0.05_290)] max-w-2xl mx-auto">
                         Merci de nous indiquer votre besoin (bunkering, services maritimes, devis) afin que nous vous répondions rapidement.
-                            </p>
+                    </p>
 
                     <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6">
-                                <Link
-                                    href={contactRoute().url}
+                        <Link
+                            href={contactRoute({ locale }).url}
                             className="btn-ocean px-10 py-5 rounded-xl text-lg font-bold flex items-center gap-3"
-                                >
+                        >
                             <Phone className="w-6 h-6" />
-                                    Nous contacter
-                                </Link>
-                                <a
+                            Nous contacter
+                        </Link>
+                        <a
                             href="tel:+224621418556"
                             className="px-10 py-5 rounded-xl border-2 border-[oklch(0.35_0.18_290)] text-[oklch(0.35_0.18_290)] font-bold hover:bg-[oklch(0.35_0.18_290/0.08)] transition-all flex items-center gap-3"
-                                >
+                        >
                             +224 621 41 85 56
-                                </a>
+                        </a>
                     </div>
                 </div>
             </section>

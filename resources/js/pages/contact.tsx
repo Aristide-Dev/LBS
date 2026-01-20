@@ -1,8 +1,9 @@
 import { Head, useForm } from '@inertiajs/react';
 import { Mail, MapPin, Phone, Send, MessageSquare, Clock, Shield, ChevronDown, CheckCircle2, FileText, Building2 } from 'lucide-react';
 import PublicLayout from '@/layouts/public-layout';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useState, useMemo } from 'react';
 import { store as contactStoreRoute } from '@/actions/App/Http/Controllers/ContactController';
+import { useTranslation } from '@/lib/i18n';
 import LBSLogo from '@/components/lbs-logo';
 
 interface ContactFormData {
@@ -13,34 +14,8 @@ interface ContactFormData {
     message: string;
 }
 
-const faqs = [
-    {
-        question: "Quels types de carburants maritimes fournissez-vous ?",
-        answer: "Nous fournissons une gamme complète : DO (Diesel Oil), GO (Gasoil), MDO (Marine Diesel Oil), MGO (Marine Gas Oil), LGFO, LSFO (Low Sulfur Fuel Oil), HSFO (High Sulfur Fuel Oil), Fioul Léger et Fioul Lourd. Tous conformes aux normes internationales."
-    },
-    {
-        question: "Quelles sont vos méthodes de livraison ?",
-        answer: "Nous proposons deux méthodes de livraison : Ship-to-Ship (directement en mer ou au port) et Ship-to-Truck (pour les opérations terrestres). Chaque opération est réalisée avec rigueur et traçabilité."
-    },
-    {
-        question: "Êtes-vous disponibles en urgence ?",
-        answer: "Oui, nous sommes opérationnels 24 heures sur 24 et 7 jours sur 7. Notre engagement envers la fiabilité et la rapidité d'exécution nous permet de répondre à vos besoins urgents."
-    },
-    {
-        question: "Quels services maritimes proposez-vous en plus du bunkering ?",
-        answer: "Outre le soutage, nous offrons l'avitaillement des navires, le support aux opérations soutages, ainsi que des services pétroliers incluant l'approvisionnement, le trading, le transport et le stockage."
-    }
-];
-
-const serviceTypes = [
-    { value: 'bunkering', label: 'Bunkering (Soutage)' },
-    { value: 'maritime', label: 'Services Maritimes' },
-    { value: 'petrolier', label: 'Services Pétroliers' },
-    { value: 'devis', label: 'Demande de Devis' },
-    { value: 'autre', label: 'Autre' },
-];
-
 export default function Contact() {
+    const { t, get, locale } = useTranslation();
     const { data, setData, post, processing, errors, reset, wasSuccessful } = useForm<ContactFormData>({
         name: '',
         email: '',
@@ -51,9 +26,26 @@ export default function Contact() {
 
     const [openFaq, setOpenFaq] = useState<number | null>(0);
 
+    // Clés des FAQs pour itération
+    const faqKeys = ['fuel_types', 'delivery', 'urgency', 'services'];
+
+    // Générer les types de service depuis les traductions
+    const serviceTypes = useMemo(() => {
+        const types = get('contact.service_types') as Record<string, string> | null;
+        if (!types) return [];
+
+        return [
+            { value: 'bunkering', label: types.bunkering },
+            { value: 'maritime', label: types.maritime },
+            { value: 'petroleum', label: types.petroleum },
+            { value: 'quote', label: types.quote },
+            { value: 'other', label: types.other },
+        ];
+    }, [get]);
+
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(contactStoreRoute().url, {
+        post(contactStoreRoute({ locale }).url, {
             onSuccess: () => reset(),
         });
     };
@@ -66,11 +58,11 @@ export default function Contact() {
             </Head>
 
             {/* Hero Section */}
-            <section className="relative min-h-[550px] flex items-center overflow-hidden">
+            <section className="relative min-h-[550px] flex items-center overflow-hidden pt-20">
                 <div className="absolute inset-0">
                     <img
                         src="/images/maritime_collaboration_1767107241080.png"
-                        alt="Collaboration maritime professionnelle"
+                        alt={t('contact.hero.title') + ' ' + t('contact.hero.title_highlight')}
                         className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-[oklch(0.20_0.15_295)] via-[oklch(0.28_0.16_290/0.95)] to-[oklch(0.35_0.18_285/0.85)]" />
@@ -84,16 +76,16 @@ export default function Contact() {
                         <div className="inline-flex items-center gap-3 mb-10">
                             <div className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[oklch(0.70_0.16_55/0.20)] border border-[oklch(0.70_0.16_55/0.4)] backdrop-blur-md">
                                 <Clock className="w-4 h-4 text-[oklch(0.80_0.14_55)]" />
-                                <span className="text-sm font-semibold text-[oklch(0.80_0.14_55)] tracking-wide">Disponible 24h/24 - 7j/7</span>
+                                <span className="text-sm font-semibold text-[oklch(0.80_0.14_55)] tracking-wide">{t('contact.hero.badge')}</span>
                             </div>
                         </div>
 
                         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
-                            Contactez{' '}
-                            <span className="text-gradient-gold">LOURA BUNKER SERVICES</span>
+                            {t('contact.hero.title')}{' '}
+                            <span className="text-gradient-gold">{t('contact.hero.title_highlight')}</span>
                         </h1>
                         <p className="mt-8 text-xl text-[oklch(0.85_0.02_290)] leading-relaxed max-w-2xl">
-                            Notre équipe est à votre disposition pour toute information ou demande de devis. Merci de nous indiquer votre besoin afin que nous vous répondions rapidement.
+                            {t('contact.hero.description')}
                         </p>
                     </div>
                 </div>
@@ -120,7 +112,7 @@ export default function Contact() {
                             {/* Contact Cards */}
                             <div>
                                 <h2 className="font-serif text-3xl font-bold text-[oklch(0.25_0.14_295)] mb-8">
-                                    Coordonnées
+                                    {t('contact.contact_info.title')}
                                 </h2>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -129,10 +121,10 @@ export default function Contact() {
                                         <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-[oklch(0.35_0.18_290)] text-[oklch(0.70_0.16_55)] mb-4 group-hover:scale-110 transition-transform">
                                             <Phone className="w-6 h-6" />
                                         </div>
-                                        <h3 className="font-bold text-[oklch(0.28_0.14_295)] text-lg">Téléphone</h3>
-                                        <p className="text-sm text-[oklch(0.50_0.05_290)] mt-1 mb-3">Ligne directe</p>
+                                        <h3 className="font-bold text-[oklch(0.28_0.14_295)] text-lg">{t('contact.contact_info.phone.title')}</h3>
+                                        <p className="text-sm text-[oklch(0.50_0.05_290)] mt-1 mb-3">{t('contact.contact_info.phone.subtitle')}</p>
                                         <a href="tel:+224621418556" className="text-lg font-bold text-[oklch(0.35_0.18_290)] hover:text-[oklch(0.70_0.16_55)] transition-colors">
-                                            +224 621 41 85 56
+                                            {t('contact.contact_info.phone.value')}
                                         </a>
                                     </div>
 
@@ -141,10 +133,10 @@ export default function Contact() {
                                         <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-[oklch(0.70_0.16_55)] text-white mb-4 group-hover:scale-110 transition-transform">
                                             <Mail className="w-6 h-6" />
                                         </div>
-                                        <h3 className="font-bold text-[oklch(0.28_0.14_295)] text-lg">Email</h3>
-                                        <p className="text-sm text-[oklch(0.50_0.05_290)] mt-1 mb-3">Direction Générale</p>
+                                        <h3 className="font-bold text-[oklch(0.28_0.14_295)] text-lg">{t('contact.contact_info.email.title')}</h3>
+                                        <p className="text-sm text-[oklch(0.50_0.05_290)] mt-1 mb-3">{t('contact.contact_info.email.subtitle')}</p>
                                         <a href="mailto:dg@lbsguinee.com" className="text-lg font-bold text-[oklch(0.35_0.18_290)] hover:text-[oklch(0.70_0.16_55)] transition-colors">
-                                            dg@lbsguinee.com
+                                            {t('contact.contact_info.email.value')}
                                         </a>
                                     </div>
                                 </div>
@@ -157,21 +149,21 @@ export default function Contact() {
                                     <div className="relative z-10">
                                         <div className="flex items-center gap-3 text-[oklch(0.70_0.16_55)] mb-4">
                                             <MapPin className="w-5 h-5" />
-                                            <span className="text-sm font-bold uppercase tracking-widest">Adresse</span>
+                                            <span className="text-sm font-bold uppercase tracking-widest">{t('contact.contact_info.address.title')}</span>
                                         </div>
-                                        <h3 className="text-2xl font-serif font-bold mb-2">Camayenne</h3>
+                                        <h3 className="text-2xl font-serif font-bold mb-2">{t('contact.contact_info.address.city')}</h3>
                                         <p className="text-[oklch(0.80_0.03_290)] text-lg">
-                                            Commune de Dixinn<br />
-                                            Conakry, République de Guinée
+                                            {t('contact.contact_info.address.location')}<br />
+                                            {t('contact.contact_info.address.country')}
                                         </p>
                                         <div className="mt-6 pt-6 border-t border-[oklch(0.38_0.12_290)] flex flex-wrap items-center gap-6 text-sm text-[oklch(0.72_0.04_290)]">
                                             <span className="flex items-center gap-2">
                                                 <Clock className="w-4 h-4 text-[oklch(0.70_0.16_55)]" />
-                                                24h/24 - 7j/7
+                                                {t('contact.contact_info.address.available')}
                                             </span>
                                             <span className="flex items-center gap-2">
                                                 <Shield className="w-4 h-4 text-[oklch(0.70_0.16_55)]" />
-                                                Service sécurisé
+                                                {t('contact.contact_info.address.secure')}
                                             </span>
                                         </div>
                                     </div>
@@ -182,13 +174,13 @@ export default function Contact() {
                             <div className="bg-[oklch(0.70_0.16_55/0.10)] rounded-2xl p-8 border border-[oklch(0.70_0.16_55/0.25)]">
                                 <div className="flex items-center gap-3 mb-6">
                                     <Building2 className="w-6 h-6 text-[oklch(0.60_0.14_55)]" />
-                                    <h3 className="font-serif text-xl font-bold text-[oklch(0.35_0.18_290)]">Informations légales</h3>
+                                    <h3 className="font-serif text-xl font-bold text-[oklch(0.35_0.18_290)]">{t('contact.contact_info.legal.title')}</h3>
                                 </div>
                                 <div className="space-y-3 text-[oklch(0.45_0.05_290)]">
-                                    <p><span className="font-semibold text-[oklch(0.35_0.12_290)]">Raison sociale :</span> LOURA BUNKER SERVICES (SAU)</p>
-                                    <p><span className="font-semibold text-[oklch(0.35_0.12_290)]">Capital :</span> 1 000 000 000 GNF</p>
-                                    <p><span className="font-semibold text-[oklch(0.35_0.12_290)]">R.C.C.M :</span> GN.TCC.2025.B06619</p>
-                                    <p><span className="font-semibold text-[oklch(0.35_0.12_290)]">NIF :</span> 678972498 7Z</p>
+                                    <p><span className="font-semibold text-[oklch(0.35_0.12_290)]">{t('contact.contact_info.legal.company')}</span> {t('contact.contact_info.legal.company_value')}</p>
+                                    <p><span className="font-semibold text-[oklch(0.35_0.12_290)]">{t('contact.contact_info.legal.capital')}</span> {t('contact.contact_info.legal.capital_value')}</p>
+                                    <p><span className="font-semibold text-[oklch(0.35_0.12_290)]">{t('contact.contact_info.legal.rccm')}</span> {t('contact.contact_info.legal.rccm_value')}</p>
+                                    <p><span className="font-semibold text-[oklch(0.35_0.12_290)]">{t('contact.contact_info.legal.nif')}</span> {t('contact.contact_info.legal.nif_value')}</p>
                                 </div>
                             </div>
 
@@ -196,22 +188,22 @@ export default function Contact() {
                             <div className="bg-[oklch(0.97_0.008_290)] rounded-3xl p-8 border border-[oklch(0.88_0.02_290)]">
                                 <h3 className="font-serif text-2xl font-bold text-[oklch(0.25_0.14_295)] mb-6 flex items-center gap-3">
                                     <MessageSquare className="w-6 h-6 text-[oklch(0.40_0.18_290)]" />
-                                    Questions Fréquentes
+                                    {t('contact.faq.title')}
                                 </h3>
                                 <div className="space-y-4">
-                                    {faqs.map((faq, index) => (
-                                        <div key={index} className="bg-white rounded-xl border border-[oklch(0.88_0.02_290)] overflow-hidden transition-all duration-200 hover:shadow-md">
+                                    {faqKeys.map((faqKey, index) => (
+                                        <div key={faqKey} className="bg-white rounded-xl border border-[oklch(0.88_0.02_290)] overflow-hidden transition-all duration-200 hover:shadow-md">
                                             <button
                                                 onClick={() => setOpenFaq(openFaq === index ? null : index)}
                                                 className="w-full flex items-center justify-between p-5 text-left hover:bg-[oklch(0.98_0.005_290)] transition-colors"
                                             >
-                                                <span className="font-semibold text-[oklch(0.28_0.14_295)] pr-4">{faq.question}</span>
+                                                <span className="font-semibold text-[oklch(0.28_0.14_295)] pr-4">{t(`contact.faq.items.${faqKey}.question`)}</span>
                                                 <ChevronDown className={`w-5 h-5 text-[oklch(0.50_0.05_290)] transition-transform duration-300 flex-shrink-0 ${openFaq === index ? 'rotate-180' : ''}`} />
                                             </button>
                                             <div className={`transition-all duration-300 ease-in-out ${openFaq === index ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
                                                 <div className="px-5 pb-5 border-t border-[oklch(0.94_0.005_290)]">
                                                     <p className="text-[oklch(0.50_0.05_290)] text-sm leading-relaxed pt-4">
-                                                    {faq.answer}
+                                                    {t(`contact.faq.items.${faqKey}.answer`)}
                                                 </p>
                                                 </div>
                                             </div>
@@ -228,15 +220,15 @@ export default function Contact() {
                                 {wasSuccessful && (
                                     <div className="absolute inset-0 z-20 bg-[oklch(0.55_0.12_175/0.95)] backdrop-blur-sm flex flex-col items-center justify-center p-8 text-center text-white animate-in fade-in duration-500">
                                         <CheckCircle2 className="w-20 h-20 mb-6 animate-bounce" />
-                                        <h3 className="text-3xl font-serif font-bold mb-4">Message Envoyé !</h3>
+                                        <h3 className="text-3xl font-serif font-bold mb-4">{t('contact.form.success.title')}</h3>
                                         <p className="text-[oklch(0.95_0.05_175)] text-lg">
-                                            Merci pour votre confiance. Notre équipe va vous recontacter très rapidement.
+                                            {t('contact.form.success.description')}
                                         </p>
                                         <button
                                             onClick={() => reset()}
                                             className="mt-10 px-8 py-3 bg-white text-[oklch(0.45_0.10_175)] font-bold rounded-xl hover:bg-[oklch(0.95_0.03_175)] transition-colors"
                                         >
-                                            Envoyer un autre message
+                                            {t('contact.form.success.button')}
                                         </button>
                                     </div>
                                 )}
@@ -246,49 +238,49 @@ export default function Contact() {
                                         <div className="w-12 h-12 rounded-xl bg-[oklch(0.35_0.18_290)] flex items-center justify-center">
                                             <FileText className="w-6 h-6 text-[oklch(0.70_0.16_55)]" />
                                         </div>
-                                        <h2 className="font-serif text-2xl font-bold text-[oklch(0.25_0.14_295)]">Formulaire de contact</h2>
+                                        <h2 className="font-serif text-2xl font-bold text-[oklch(0.25_0.14_295)]">{t('contact.form.title')}</h2>
                                     </div>
                                     <p className="text-[oklch(0.50_0.05_290)] mb-8 ml-16">
-                                        Nous vous répondrons dans les plus brefs délais.
+                                        {t('contact.form.description')}
                                     </p>
 
                                     <form onSubmit={submit} className="space-y-5">
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                             <div>
-                                                <label htmlFor="name" className="block text-xs font-bold text-[oklch(0.50_0.05_290)] uppercase tracking-widest mb-2">Nom Complet *</label>
+                                                <label htmlFor="name" className="block text-xs font-bold text-[oklch(0.50_0.05_290)] uppercase tracking-widest mb-2">{t('contact.form.fields.name')}</label>
                                                 <input
                                                     type="text"
                                                     id="name"
                                                     value={data.name}
                                                     onChange={(e) => setData('name', e.target.value)}
                                                     className={`w-full rounded-xl border ${errors.name ? 'border-red-300' : 'border-[oklch(0.88_0.02_290)]'} bg-[oklch(0.98_0.005_290)] px-4 py-4 text-[oklch(0.28_0.14_295)] focus:bg-white focus:border-[oklch(0.70_0.16_55)] focus:ring-4 focus:ring-[oklch(0.70_0.16_55/0.12)] transition-all`}
-                                                    placeholder="Votre nom"
+                                                    placeholder={t('contact.form.fields.name_placeholder')}
                                                     required
                                                 />
                                             </div>
                                             <div>
-                                                <label htmlFor="email" className="block text-xs font-bold text-[oklch(0.50_0.05_290)] uppercase tracking-widest mb-2">Email *</label>
+                                                <label htmlFor="email" className="block text-xs font-bold text-[oklch(0.50_0.05_290)] uppercase tracking-widest mb-2">{t('contact.form.fields.email')}</label>
                                                 <input
                                                     type="email"
                                                     id="email"
                                                     value={data.email}
                                                     onChange={(e) => setData('email', e.target.value)}
                                                     className={`w-full rounded-xl border ${errors.email ? 'border-red-300' : 'border-[oklch(0.88_0.02_290)]'} bg-[oklch(0.98_0.005_290)] px-4 py-4 text-[oklch(0.28_0.14_295)] focus:bg-white focus:border-[oklch(0.70_0.16_55)] focus:ring-4 focus:ring-[oklch(0.70_0.16_55/0.12)] transition-all`}
-                                                    placeholder="votre@email.com"
+                                                    placeholder={t('contact.form.fields.email_placeholder')}
                                                     required
                                                 />
                                             </div>
                                         </div>
 
                                         <div>
-                                            <label htmlFor="company" className="block text-xs font-bold text-[oklch(0.50_0.05_290)] uppercase tracking-widest mb-2">Entreprise / Navire</label>
+                                            <label htmlFor="company" className="block text-xs font-bold text-[oklch(0.50_0.05_290)] uppercase tracking-widest mb-2">{t('contact.form.fields.company')}</label>
                                             <input
                                                 type="text"
                                                 id="company"
                                                 value={data.company}
                                                 onChange={(e) => setData('company', e.target.value)}
                                                 className="w-full rounded-xl border border-[oklch(0.88_0.02_290)] bg-[oklch(0.98_0.005_290)] px-4 py-4 text-[oklch(0.28_0.14_295)] focus:bg-white focus:border-[oklch(0.70_0.16_55)] focus:ring-4 focus:ring-[oklch(0.70_0.16_55/0.12)] transition-all"
-                                                placeholder="Nom de votre entreprise ou navire"
+                                                placeholder={t('contact.form.fields.company_placeholder')}
                                             />
                                         </div>
 
@@ -301,7 +293,7 @@ export default function Contact() {
                                                 className="w-full rounded-xl border border-[oklch(0.88_0.02_290)] bg-[oklch(0.98_0.005_290)] px-4 py-4 text-[oklch(0.28_0.14_295)] focus:bg-white focus:border-[oklch(0.70_0.16_55)] focus:ring-4 focus:ring-[oklch(0.70_0.16_55/0.12)] transition-all"
                                                 required
                                             >
-                                                <option value="">Sélectionnez un service</option>
+                                                <option value="">{t('contact.form.fields.service_placeholder')}</option>
                                                 {serviceTypes.map((type) => (
                                                     <option key={type.value} value={type.value}>{type.label}</option>
                                                 ))}
@@ -309,14 +301,14 @@ export default function Contact() {
                                         </div>
 
                                         <div>
-                                            <label htmlFor="message" className="block text-xs font-bold text-[oklch(0.50_0.05_290)] uppercase tracking-widest mb-2">Votre Message *</label>
+                                            <label htmlFor="message" className="block text-xs font-bold text-[oklch(0.50_0.05_290)] uppercase tracking-widest mb-2">{t('contact.form.fields.message')}</label>
                                             <textarea
                                                 id="message"
                                                 rows={5}
                                                 value={data.message}
                                                 onChange={(e) => setData('message', e.target.value)}
                                                 className={`w-full rounded-xl border ${errors.message ? 'border-red-300' : 'border-[oklch(0.88_0.02_290)]'} bg-[oklch(0.98_0.005_290)] px-4 py-4 text-[oklch(0.28_0.14_295)] focus:bg-white focus:border-[oklch(0.70_0.16_55)] focus:ring-4 focus:ring-[oklch(0.70_0.16_55/0.12)] transition-all resize-none`}
-                                                placeholder="Détaillez votre demande (Type de carburant, Quantité, Port, Date...)"
+                                                placeholder={t('contact.form.fields.message_placeholder')}
                                                 required
                                             />
                                         </div>
@@ -330,12 +322,12 @@ export default function Contact() {
                                                 {processing ? (
                                                     <span className="flex items-center gap-3">
                                                         <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                                        Envoi en cours...
+                                                        {t('contact.form.sending')}
                                                     </span>
                                                 ) : (
                                                     <>
                                                         <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                                                        Envoyer le message
+                                                        {t('contact.form.submit')}
                                                     </>
                                                 )}
                                             </div>
@@ -348,12 +340,12 @@ export default function Contact() {
                                             <LBSLogo size="md" variant="icon" />
                                             <div>
                                                 <p className="text-sm font-bold text-[oklch(0.35_0.18_290)]">LOURA BUNKER SERVICES</p>
-                                                <p className="text-xs text-[oklch(0.55_0.05_290)]">Réponse garantie sous 24h</p>
+                                                <p className="text-xs text-[oklch(0.55_0.05_290)]">{t('contact.form.trust.response')}</p>
                                             </div>
                                                 </div>
                                         <div className="flex items-center gap-2 text-[oklch(0.55_0.05_290)]">
                                             <Shield className="w-4 h-4" />
-                                            <span className="text-xs font-medium">Données sécurisées</span>
+                                            <span className="text-xs font-medium">{t('contact.form.trust.secure')}</span>
                                         </div>
                                     </div>
                                 </div>

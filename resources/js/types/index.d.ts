@@ -22,11 +22,20 @@ export interface NavItem {
     isActive?: boolean;
 }
 
+export interface Translations {
+    common: Record<string, any>;
+    home: Record<string, any>;
+    contact: Record<string, any>;
+}
+
 export interface SharedData {
     name: string;
     quote: { message: string; author: string };
     auth: Auth;
     sidebarOpen: boolean;
+    locale: string;
+    availableLocales: string[];
+    translations: Translations;
     [key: string]: unknown;
 }
 

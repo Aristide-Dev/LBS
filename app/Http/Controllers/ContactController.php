@@ -21,11 +21,10 @@ class ContactController extends Controller
         // Configuration SEO de base
         $this->setupBaseSEO();
 
-        // Configuration SEO spécifique à la page contact
+        // Configuration SEO spécifique à la page contact (utilise les traductions)
         $this->setupPageSEO(
-            title: 'Contact - LOURA BUNKER SERVICES | Devis Soutage Maritime Guinée',
-            description: 'Contactez LOURA BUNKER SERVICES pour vos besoins en soutage maritime, services maritimes et pétroliers en Guinée. Disponible 24h/24, 7j/7. Tél: +224 621 41 85 56',
-            url: url('/contact'),
+            translationKey: 'contact',
+            url: url()->current(),
             image: url('/web-app-manifest-512x512.png')
         );
 
@@ -44,7 +43,7 @@ class ContactController extends Controller
 
         return redirect()
             ->back()
-            ->with('success', 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.');
+            ->with('success', trans('contact.success_message'));
     }
 }
 

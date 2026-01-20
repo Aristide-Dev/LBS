@@ -1,29 +1,47 @@
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, router } from '@inertiajs/react';
 import { Menu, X, ArrowUp, Mail, Phone, MapPin, Clock } from 'lucide-react';
 import { type ReactNode, useState, useEffect } from 'react';
 import { index as homeRoute } from '@/actions/App/Http/Controllers/HomeController';
 import { index as contactRoute } from '@/actions/App/Http/Controllers/ContactController';
 import { useActiveMenu } from '@/hooks/useActiveMenu';
+import { useTranslation } from '@/lib/i18n';
 import LBSLogo from '@/components/lbs-logo';
+import LanguageSwitcher from '@/components/language-switcher';
 
 interface PublicLayoutProps {
     children: ReactNode;
 }
 
-const navigation = [
-    { name: 'Accueil', href: '#accueil', isAnchor: true },
-    { name: 'À propos', href: '#a-propos', isAnchor: true },
-    { name: 'Services', href: '#services', isAnchor: true },
-];
-
 export default function PublicLayout({ children }: PublicLayoutProps) {
+    const { t, locale } = useTranslation();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [showScrollTop, setShowScrollTop] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const { url } = usePage();
-    const isHomePage = url === '/';
+    const isHomePage = url === '/' || url.startsWith('/fr/') || url.startsWith('/en/');
 
-    const anchorIds = navigation.filter(item => item.isAnchor).map(item => item.href);
+    const navigation = [
+        { name: t('common.navigation.home'), href: '/#accueil', isAnchor: true },
+        { name: t('common.navigation.about'), href: '/#a-propos', isAnchor: true },
+        { name: t('common.navigation.services'), href: '/#services', isAnchor: true },
+    ];
+
+    // Normaliser les IDs pour useActiveMenu (enlever le / au début si présent)
+    const anchorIds = navigation
+        .filter(item => item.isAnchor)
+        .map(item => {
+            const href = item.href;
+            // Si ça commence par /#, on enlève le /
+            if (href.startsWith('/#')) {
+                return href.substring(1); // Retourne #accueil
+            }
+            // Si ça commence par #, on le garde tel quel
+            if (href.startsWith('#')) {
+                return href;
+            }
+            // Sinon, on ajoute #
+            return `#${href}`;
+        });
     const activeSection = useActiveMenu(isHomePage ? anchorIds : [], 150);
 
     useEffect(() => {
@@ -39,14 +57,35 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
     }, []);
 
     const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-        if (href.startsWith('#') && isHomePage) {
+        // Gérer les hrefs qui commencent par /# ou #
+        const anchor = href.startsWith('/#') ? href.substring(1) : (href.startsWith('#') ? href : `#${href}`);
+        if (anchor.startsWith('#') && isHomePage) {
             e.preventDefault();
-            const element = document.querySelector(href);
+            const element = document.querySelector(anchor);
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth' });
             }
             setMobileMenuOpen(false);
         }
+    };
+
+    const handleNavigationToHome = (href: string, e?: React.MouseEvent) => {
+        if (e) {
+            e.preventDefault();
+        }
+        // Naviguer vers la page d'accueil avec l'ancre
+        const homeUrl = homeRoute({ locale }).url + href;
+        router.visit(homeUrl, {
+            onSuccess: () => {
+                // Attendre que le DOM soit mis à jour, puis scroller vers l'ancre
+                setTimeout(() => {
+                    const element = document.querySelector(href);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 100);
+            }
+        });
     };
 
     const scrollToTop = () => {
@@ -67,7 +106,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                 <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
                     {/* Logo */}
                     <div className="flex lg:flex-1">
-                        <Link href={homeRoute().url} className="-m-1.5 p-1.5 flex items-center gap-4 group">
+                        <Link href={homeRoute({ locale }).url} className="-m-1.5 p-1.5 flex items-center gap-4 group">
                             <LBSLogo
                                 size="md"
                                 variant="icon"
@@ -99,7 +138,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                             }`}
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                         >
-                            <span className="sr-only">Ouvrir le menu</span>
+                            <span className="sr-only">{t('common.buttons.open_menu')}</span>
                             {mobileMenuOpen ? (
                                 <X className="h-6 w-6" aria-hidden="true" />
                             ) : (
@@ -111,7 +150,10 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                     {/* Desktop navigation */}
                     <div className="hidden lg:flex lg:gap-x-10">
                         {navigation.map((item) => {
-                            const isActive = activeSection === item.href;
+                            // Normaliser la comparaison : activeSection retourne #accueil, item.href est /#accueil
+                            const normalizedHref = item.href.startsWith('/#') ? item.href.substring(1) : item.href;
+                            const normalizedActiveSection = activeSection.startsWith('/#') ? activeSection.substring(1) : activeSection;
+                            const isActive = normalizedActiveSection === normalizedHref;
 
                             return item.isAnchor && isHomePage ? (
                                 <a
@@ -138,9 +180,10 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                     }`} />
                                 </a>
                             ) : (
-                                <Link
+                                <a
                                     key={item.name}
-                                    href={homeRoute().url + item.href}
+                                    href={homeRoute({ locale }).url + item.href}
+                                    onClick={(e) => handleNavigationToHome(item.href, e)}
                                     className={`text-sm font-semibold transition-colors ${
                                         isScrolled
                                             ? 'text-[oklch(0.50_0.05_290)] hover:text-[oklch(0.35_0.18_290)]'
@@ -148,22 +191,23 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                     }`}
                                 >
                                     {item.name}
-                                </Link>
+                                </a>
                             );
                         })}
                     </div>
 
-                    {/* CTA Button */}
-                    <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+                    {/* Language Switcher & CTA Button */}
+                    <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-4">
+                        <LanguageSwitcher className={isScrolled ? '' : 'text-white'}/>
                         <Link
-                            href={contactRoute().url}
+                            href={contactRoute({ locale }).url}
                             className={`rounded-lg px-6 py-3 text-sm font-bold transition-all duration-300 ${
                                 isScrolled
                                     ? 'bg-[oklch(0.35_0.18_290)] text-white hover:bg-[oklch(0.30_0.16_295)] shadow-lg shadow-[oklch(0.35_0.18_290/0.2)]'
                                     : 'btn-gold'
                             }`}
                         >
-                            Nous contacter
+                            {t('common.buttons.contact_us')}
                         </Link>
                     </div>
                 </nav>
@@ -172,7 +216,10 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                 <div className={`lg:hidden transition-all duration-300 ease-in-out ${mobileMenuOpen ? 'max-h-[400px] opacity-100' : 'max-h-0 opacity-0'} overflow-hidden bg-white border-b border-[oklch(0.88_0.02_290)] shadow-lg`}>
                     <div className="space-y-2 px-6 pb-6 pt-4">
                         {navigation.map((item) => {
-                            const isActive = activeSection === item.href;
+                            // Normaliser la comparaison : activeSection retourne #accueil, item.href est /#accueil
+                            const normalizedHref = item.href.startsWith('/#') ? item.href.substring(1) : item.href;
+                            const normalizedActiveSection = activeSection.startsWith('/#') ? activeSection.substring(1) : activeSection;
+                            const isActive = normalizedActiveSection === normalizedHref;
 
                             return item.isAnchor && isHomePage ? (
                                 <a
@@ -188,21 +235,28 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                     {item.name}
                                 </a>
                             ) : (
-                                <Link
+                                <a
                                     key={item.name}
-                                    href={homeRoute().url + item.href}
+                                    href={homeRoute({ locale }).url + item.href}
+                                    onClick={(e) => {
+                                        handleNavigationToHome(item.href, e);
+                                        setMobileMenuOpen(false);
+                                    }}
                                     className="block rounded-xl px-4 py-3 text-base font-semibold text-[oklch(0.35_0.12_290)] hover:bg-[oklch(0.96_0.008_290)]"
                                 >
                                     {item.name}
-                                </Link>
+                                </a>
                             );
                         })}
-                        <Link
-                            href={contactRoute().url}
-                            className="mt-4 block w-full rounded-xl bg-[oklch(0.35_0.18_290)] px-4 py-4 text-center text-base font-bold text-white shadow-lg"
-                        >
-                            Nous contacter
-                        </Link>
+                        <div className="mt-4 space-y-2">
+                            <LanguageSwitcher  className={isScrolled ? '' : 'text-white'}/>
+                            <Link
+                                href={contactRoute({ locale }).url}
+                                className="block w-full rounded-xl bg-[oklch(0.35_0.18_290)] px-4 py-4 text-center text-base font-bold text-white shadow-lg"
+                            >
+                                {t('common.buttons.contact_us')}
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -218,7 +272,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                 className={`fixed bottom-8 right-8 z-40 p-4 rounded-xl bg-[oklch(0.35_0.18_290)] text-white shadow-xl transition-all duration-300 hover:bg-[oklch(0.30_0.16_295)] hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[oklch(0.70_0.16_55)] focus:ring-offset-2 ${
                     showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'
                 }`}
-                aria-label="Retour en haut"
+                aria-label={t('common.buttons.back_to_top')}
             >
                 <ArrowUp className="w-5 h-5" />
             </button>
@@ -242,7 +296,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                 </div>
                             </div>
                             <p className="text-[oklch(0.75_0.03_290)] max-w-md leading-relaxed mb-8">
-                                Votre partenaire de confiance pour le soutage maritime et les services pétroliers en Guinée et Afrique de l'Ouest. Expertise locale, normes internationales.
+                                {t('common.footer.description')}
                             </p>
 
                             {/* Contact Quick Info */}
@@ -261,26 +315,36 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                         {/* Quick links */}
                         <div>
                             <h3 className="text-sm font-bold uppercase tracking-wider text-[oklch(0.70_0.16_55)] mb-6">
-                                Navigation
+                                {t('common.footer.navigation')}
                             </h3>
                             <ul className="space-y-4">
                                 {navigation.map((item) => (
                                     <li key={item.name}>
-                                        <a
-                                            href={isHomePage ? item.href : homeRoute().url + item.href}
-                                            onClick={(e) => isHomePage ? handleAnchorClick(e, item.href) : null}
-                                            className="text-[oklch(0.75_0.03_290)] hover:text-white transition-colors cursor-pointer font-medium"
-                                        >
-                                            {item.name}
-                                        </a>
+                                        {isHomePage ? (
+                                            <a
+                                                href={item.href}
+                                                onClick={(e) => handleAnchorClick(e, item.href)}
+                                                className="text-[oklch(0.75_0.03_290)] hover:text-white transition-colors cursor-pointer font-medium"
+                                            >
+                                                {item.name}
+                                            </a>
+                                        ) : (
+                                            <a
+                                                href={homeRoute({ locale }).url + item.href}
+                                                onClick={(e) => handleNavigationToHome(item.href, e)}
+                                                className="text-[oklch(0.75_0.03_290)] hover:text-white transition-colors cursor-pointer font-medium"
+                                            >
+                                                {item.name}
+                                            </a>
+                                        )}
                                     </li>
                                 ))}
                                 <li>
                                     <Link
-                                        href={contactRoute().url}
+                                        href={contactRoute({ locale }).url}
                                         className="text-[oklch(0.75_0.03_290)] hover:text-white transition-colors font-medium"
                                     >
-                                        Contact
+                                        {t('common.navigation.contact')}
                                     </Link>
                                 </li>
                             </ul>
@@ -289,7 +353,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                         {/* Address */}
                         <div>
                             <h3 className="text-sm font-bold uppercase tracking-wider text-[oklch(0.70_0.16_55)] mb-6">
-                                Adresse
+                                {t('common.footer.address')}
                             </h3>
                             <div className="space-y-4 text-[oklch(0.75_0.03_290)]">
                                 <div className="flex items-start gap-3">
@@ -302,7 +366,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                 </div>
                                 <div className="flex items-center gap-3 pt-4">
                                     <Clock className="w-4 h-4 text-[oklch(0.65_0.14_55)]" />
-                                    <span className="text-sm">Disponible 24h/24 - 7j/7</span>
+                                    <span className="text-sm">{t('common.footer.available')}</span>
                                 </div>
                             </div>
                         </div>
@@ -314,7 +378,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                     <div className="mx-auto max-w-7xl px-6 py-6 lg:px-8">
                         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                             <p className="text-sm text-[oklch(0.62_0.04_290)]">
-                                &copy; {new Date().getFullYear()} LOURA BUNKER SERVICES. Tous droits réservés.
+                                &copy; {new Date().getFullYear()} LOURA BUNKER SERVICES. {t('common.footer.rights')}.
                             </p>
                             <div className="flex items-center gap-6 text-sm text-[oklch(0.62_0.04_290)]">
                                 <span>SAU - Capital : 1 000 000 000 GNF</span>

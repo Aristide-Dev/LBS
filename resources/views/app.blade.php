@@ -23,16 +23,27 @@
         </script>
         @endif
 
+        {{-- Balises hreflang pour le SEO multilingue --}}
+        @if(isset($hreflangLinks) && is_array($hreflangLinks))
+            @foreach($hreflangLinks as $locale => $url)
+                <link rel="alternate" hreflang="{{ $locale }}" href="{{ $url }}">
+            @endforeach
+            {{-- Balise x-default pour la langue par défaut (français) --}}
+            @if(isset($hreflangLinks['fr']))
+                <link rel="alternate" hreflang="x-default" href="{{ $hreflangLinks['fr'] }}">
+            @endif
+        @endif
+
         {{-- Meta Tags supplémentaires non gérés par SEOTools --}}
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
         <meta name="googlebot" content="index, follow">
-        <meta name="language" content="fr">
+        <meta name="language" content="{{ app()->getLocale() }}">
         <meta name="author" content="LOURA BUNKER SERVICES">
         <meta name="geo.region" content="GN">
         <meta name="geo.placename" content="Conakry, Guinée">
         <meta name="geo.position" content="9.5092;-13.7122">
         <meta name="ICBM" content="9.5092, -13.7122">
-        <meta property="og:locale" content="fr_FR">
+        <meta property="og:locale" content="{{ app()->getLocale() === 'fr' ? 'fr_FR' : 'en_US' }}">
 
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         <script>

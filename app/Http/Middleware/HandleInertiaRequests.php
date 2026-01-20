@@ -38,6 +38,9 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
+        $locale = app()->getLocale();
+        $availableLocales = config('app.available_locales', ['fr', 'en']);
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -46,6 +49,24 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'locale' => $locale,
+            'availableLocales' => $availableLocales,
+            'translations' => $this->getTranslations($locale),
+        ];
+    }
+
+    /**
+     * Récupère toutes les traductions pour la locale donnée
+     *
+     * @param string $locale
+     * @return array
+     */
+    protected function getTranslations(string $locale): array
+    {
+        return [
+            'common' => trans('common', [], $locale),
+            'home' => trans('home', [], $locale),
+            'contact' => trans('contact', [], $locale),
         ];
     }
 }

@@ -11,14 +11,22 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
-
-Route::controller(ContactController::class)->prefix('contact')->name('contact.')->group(function () {
-    Route::get('/', 'index')->name('index');
-    Route::post('/', 'store')->name('store');
+// Redirection de la racine vers la locale par défaut (français)
+Route::get('/', function () {
+    return redirect('/fr/');
 });
 
-// Sitemap pour SEO
+// Routes localisées
+Route::prefix('{locale}')->where(['locale' => 'fr|en'])->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+
+    Route::controller(ContactController::class)->prefix('contact')->name('contact.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+    });
+});
+
+// Sitemap pour SEO (sans locale)
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 /*
