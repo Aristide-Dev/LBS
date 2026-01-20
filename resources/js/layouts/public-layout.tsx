@@ -18,30 +18,15 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
     const [showScrollTop, setShowScrollTop] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const { url } = usePage();
-    const isHomePage = url === '/' || url.startsWith('/fr/') || url.startsWith('/en/');
+    const isHomePage = url === '/' || url === '/fr' || url === '/en' || url === '/fr/' || url === '/en/';
 
     const navigation = [
-        { name: t('common.navigation.home'), href: '/#accueil', isAnchor: true },
-        { name: t('common.navigation.about'), href: '/#a-propos', isAnchor: true },
-        { name: t('common.navigation.services'), href: '/#services', isAnchor: true },
+        { name: t('common.navigation.home'), href: '#accueil', isAnchor: true },
+        { name: t('common.navigation.about'), href: '#a-propos', isAnchor: true },
+        { name: t('common.navigation.services'), href: '#services', isAnchor: true },
     ];
 
-    // Normaliser les IDs pour useActiveMenu (enlever le / au début si présent)
-    const anchorIds = navigation
-        .filter(item => item.isAnchor)
-        .map(item => {
-            const href = item.href;
-            // Si ça commence par /#, on enlève le /
-            if (href.startsWith('/#')) {
-                return href.substring(1); // Retourne #accueil
-            }
-            // Si ça commence par #, on le garde tel quel
-            if (href.startsWith('#')) {
-                return href;
-            }
-            // Sinon, on ajoute #
-            return `#${href}`;
-        });
+    const anchorIds = navigation.filter(item => item.isAnchor).map(item => item.href);
     const activeSection = useActiveMenu(isHomePage ? anchorIds : [], 150);
 
     useEffect(() => {
@@ -57,11 +42,9 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
     }, []);
 
     const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-        // Gérer les hrefs qui commencent par /# ou #
-        const anchor = href.startsWith('/#') ? href.substring(1) : (href.startsWith('#') ? href : `#${href}`);
-        if (anchor.startsWith('#') && isHomePage) {
+        if (href.startsWith('#') && isHomePage) {
             e.preventDefault();
-            const element = document.querySelector(anchor);
+            const element = document.querySelector(href);
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth' });
             }
@@ -86,7 +69,9 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                 }, 100);
             }
         });
+        setMobileMenuOpen(false);
     };
+
 
     const scrollToTop = () => {
         window.scrollTo({
@@ -150,10 +135,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                     {/* Desktop navigation */}
                     <div className="hidden lg:flex lg:gap-x-10">
                         {navigation.map((item) => {
-                            // Normaliser la comparaison : activeSection retourne #accueil, item.href est /#accueil
-                            const normalizedHref = item.href.startsWith('/#') ? item.href.substring(1) : item.href;
-                            const normalizedActiveSection = activeSection.startsWith('/#') ? activeSection.substring(1) : activeSection;
-                            const isActive = normalizedActiveSection === normalizedHref;
+                            const isActive = activeSection === item.href;
 
                             return item.isAnchor && isHomePage ? (
                                 <a
@@ -174,7 +156,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                     <span className={`absolute -bottom-1 left-0 right-0 h-0.5 rounded-full transition-all duration-300 ${
                                         isActive
                                             ? isScrolled
-                                                ? 'bg-[oklch(0.70_0.16_55)] scale-x-100'
+                                                ? 'bg-[oklch(0.35_0.18_290)] scale-x-100'
                                                 : 'bg-[oklch(0.70_0.16_55)] scale-x-100'
                                             : 'scale-x-0'
                                     }`} />
@@ -216,10 +198,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                 <div className={`lg:hidden transition-all duration-300 ease-in-out ${mobileMenuOpen ? 'max-h-[400px] opacity-100' : 'max-h-0 opacity-0'} overflow-hidden bg-white border-b border-[oklch(0.88_0.02_290)] shadow-lg`}>
                     <div className="space-y-2 px-6 pb-6 pt-4">
                         {navigation.map((item) => {
-                            // Normaliser la comparaison : activeSection retourne #accueil, item.href est /#accueil
-                            const normalizedHref = item.href.startsWith('/#') ? item.href.substring(1) : item.href;
-                            const normalizedActiveSection = activeSection.startsWith('/#') ? activeSection.substring(1) : activeSection;
-                            const isActive = normalizedActiveSection === normalizedHref;
+                            const isActive = activeSection === item.href;
 
                             return item.isAnchor && isHomePage ? (
                                 <a
@@ -238,10 +217,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                                 <a
                                     key={item.name}
                                     href={homeRoute({ locale }).url + item.href}
-                                    onClick={(e) => {
-                                        handleNavigationToHome(item.href, e);
-                                        setMobileMenuOpen(false);
-                                    }}
+                                    onClick={(e) => handleNavigationToHome(item.href, e)}
                                     className="block rounded-xl px-4 py-3 text-base font-semibold text-[oklch(0.35_0.12_290)] hover:bg-[oklch(0.96_0.008_290)]"
                                 >
                                     {item.name}
@@ -249,7 +225,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                             );
                         })}
                         <div className="mt-4 space-y-2">
-                            <LanguageSwitcher  className={isScrolled ? '' : 'text-white'}/>
+                            <LanguageSwitcher className={isScrolled ? '' : 'text-white'}/>
                             <Link
                                 href={contactRoute({ locale }).url}
                                 className="block w-full rounded-xl bg-[oklch(0.35_0.18_290)] px-4 py-4 text-center text-base font-bold text-white shadow-lg"
